@@ -36,7 +36,7 @@ export default function WhyChoose() {
             </Link>
           </div>
 
-          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl lg:aspect-[3/4]">
+          {/* <div className="relative aspect-[4/5] overflow-hidden rounded-2xl lg:aspect-[3/4]">
             <Image
               src={IMAGES.action}
               alt="Athletes training at Zero Limits Baseball"
@@ -44,7 +44,7 @@ export default function WhyChoose() {
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </section>

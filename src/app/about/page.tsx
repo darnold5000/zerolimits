@@ -27,7 +27,7 @@ export default function AboutPage() {
       <section className="py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="grid items-start gap-12 lg:grid-cols-2">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
+            {/* <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
               <Image
                 src={IMAGES.about}
                 alt="Zero Limits Baseball facility"
@@ -35,7 +35,7 @@ export default function AboutPage() {
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
-            </div>
+            </div> */}
             <div>
               <h2 className="font-display text-3xl font-bold text-zinc-900">Our Facility</h2>
               <p className="mt-4 text-lg leading-relaxed text-zinc-600">
