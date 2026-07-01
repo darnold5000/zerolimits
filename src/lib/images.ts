@@ -23,5 +23,5 @@ export const GALLERY_IMAGES = [
   { src: `${BASE}/IMG-20241008-WA0014.jpg`, alt: "Indoor facility practice" },
   // { src: `${BASE}/Zero-Limits-Baseball-Hero-section-1-2.jpg`, alt: "Zero Limits Baseball hero" },
   // { src: `${BASE}/IMG-20241008-WA0015.jpg`, alt: "Training session at Zero Limits" },
-  { src: `${BASE}/Zero-Limits-Baseball-Hero-section-1.jpg`, alt: "Zero Limits Baseball indoor facility" },
+  // { src: `${BASE}/Zero-Limits-Baseball-Hero-section-1.jpg`, alt: "Zero Limits Baseball indoor facility" },
 ] as const;
