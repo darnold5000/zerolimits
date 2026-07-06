@@ -56,6 +56,10 @@ export default function Footer() {
           <p>© {new Date().getFullYear()} {SITE.name}. All rights reserved.</p>
           <p className="text-zinc-500">{SITE.address.full}</p>
         </div>
+
+        <p className="mt-4 text-center text-xs text-zinc-600">
+          Website designed &amp; maintained by Signal Works.
+        </p>
       </div>
     </footer>
   );
