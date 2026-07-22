@@ -76,9 +76,11 @@ export const WHY_CHOOSE = [
 ] as const;
 
 export const COACHES = [
-  { name: "Coach Derek", role: "Owner / Instructor" },
-  { name: "Coach Eric", role: "Instructor" },
-  { name: "Coach Michael", role: "Instructor" },
+  { name: "Coach Derek DeVaughan", role: "Owner / Instructor" },
+  { name: "Coach Eric McGaha", role: "Instructor" },
+  { name: "Michael McAvene", role: "Pitching Instructor" },
+  { name: "Tim Denny", role: "Instructor" },
+  { name: "Blake Allen", role: "Instructor" },
 ] as const;
 
 export const PRICING = [
@@ -88,7 +90,7 @@ export const PRICING = [
     title: "1 Hour",
     price: 65,
     note: "After 1 hr, each additional 1/2 hr is $20 if done on same day",
-    upperHandKey: "privateLesson" as const,
+    lessonKey: "privateLesson" as const,
   },
   {
     id: "private-30min",
@@ -96,7 +98,7 @@ export const PRICING = [
     title: "1/2 Hour",
     price: 45,
     note: "After 1 hr, each additional 1/2 hr is $20 if done on same day",
-    upperHandKey: "privateLesson" as const,
+    lessonKey: "privateLesson" as const,
   },
   {
     id: "group-1hr",
@@ -104,7 +106,7 @@ export const PRICING = [
     title: "1 Hour",
     price: 40,
     note: "After 1 hr, each additional 1/2 hr is $20 if done on same day",
-    upperHandKey: "events" as const,
+    lessonKey: "groupLesson" as const,
   },
   {
     id: "group-30min",
@@ -112,7 +114,7 @@ export const PRICING = [
     title: "1/2 Hour",
     price: 30,
     note: "After 1 hr, each additional 1/2 hr is $20 if done on same day",
-    upperHandKey: "events" as const,
+    lessonKey: "groupLesson" as const,
   },
 ] as const;
 
@@ -137,6 +139,7 @@ export const TESTIMONIALS = [
 export const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
+  { href: "/about#our-coaches", label: "Our Coaches" },
   { href: "/schedule-training", label: "Schedule Training" },
   { href: "/gallery", label: "Gallery" },
   { href: "/contact", label: "Contact Us" },

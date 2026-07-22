@@ -34,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${oswald.variable} h-full scroll-smooth`}>
+    <html lang="en" className={`${inter.variable} ${oswald.variable} h-full`}>
       <body className="flex min-h-full flex-col bg-white font-sans text-zinc-900 antialiased">
         <Header />
         <main className="flex-1">{children}</main>

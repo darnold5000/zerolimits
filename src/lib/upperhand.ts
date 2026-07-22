@@ -1,10 +1,8 @@
 export type UpperHandLinks = {
-  signup: string;
-  login: string;
-  events: string;
-  privateLesson: string;
-  memberships: string;
-  creditPasses: string;
+  privateLessons: string;
+  groupLessons: string;
+  camps: string;
+  browseEvents: string;
 };
 
 function envOrFallback(key: string, fallback = "#"): string {
@@ -14,14 +12,9 @@ function envOrFallback(key: string, fallback = "#"): string {
 
 export function getUpperHandLinks(): UpperHandLinks {
   return {
-    signup: envOrFallback("NEXT_PUBLIC_UPPERHAND_SIGNUP_URL"),
-    login: envOrFallback(
-      "NEXT_PUBLIC_UPPERHAND_LOGIN_URL",
-      "https://app.upperhand.io/",
-    ),
-    events: envOrFallback("NEXT_PUBLIC_UPPERHAND_EVENTS_URL"),
-    privateLesson: envOrFallback("NEXT_PUBLIC_UPPERHAND_PRIVATE_LESSON_URL"),
-    memberships: envOrFallback("NEXT_PUBLIC_UPPERHAND_MEMBERSHIPS_URL"),
-    creditPasses: envOrFallback("NEXT_PUBLIC_UPPERHAND_CREDIT_PASSES_URL"),
+    privateLessons: envOrFallback("NEXT_PUBLIC_UPPERHAND_PRIVATE_LESSONS_URL"),
+    groupLessons: envOrFallback("NEXT_PUBLIC_UPPERHAND_GROUP_LESSONS_URL"),
+    camps: envOrFallback("NEXT_PUBLIC_UPPERHAND_CAMPS_URL"),
+    browseEvents: envOrFallback("NEXT_PUBLIC_UPPERHAND_BROWSE_EVENTS_URL"),
   };
 }

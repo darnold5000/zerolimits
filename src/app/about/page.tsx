@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import CoachProfile from "@/components/CoachProfile";
 import PageCTA from "@/components/PageCTA";
-import { COACHES, SITE } from "@/lib/content";
-import { IMAGES } from "@/lib/images";
+import { COACHES } from "@/content/coaches";
+import { SITE } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "About",
@@ -90,27 +90,21 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-zinc-950 py-20 text-white sm:py-24">
+      <section id="our-coaches" className="scroll-mt-24 bg-zinc-950 py-20 text-white sm:py-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <h2 className="font-display text-3xl font-bold sm:text-4xl">Our Coaches</h2>
           <p className="mt-4 max-w-3xl text-lg text-zinc-400">
             Hands-on instruction from experienced coaches who genuinely care about
             every player&apos;s development.
           </p>
-          <div className="mt-10 grid gap-6 sm:grid-cols-3">
-            {COACHES.map((coach) => (
-              <div
-                key={coach.name}
-                className="rounded-2xl border border-zinc-800 bg-zinc-900 p-8 text-center"
-              >
-                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-red-600 font-display text-2xl font-bold text-white">
-                  {coach.name.replace("Coach ", "").charAt(0)}
-                </div>
-                <h3 className="mt-5 font-display text-xl font-bold">{coach.name}</h3>
-                <p className="mt-2 text-sm font-medium uppercase tracking-wide text-red-400">
-                  {coach.role}
-                </p>
-              </div>
+          <div className="mt-14 space-y-16 sm:space-y-20">
+            {COACHES.map((coach, index) => (
+              <CoachProfile
+                key={coach.id}
+                coach={coach}
+                reverse={index % 2 === 1}
+                priority={index === 0}
+              />
             ))}
           </div>
         </div>

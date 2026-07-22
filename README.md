@@ -6,7 +6,7 @@ A Next.js demo rebuild of [zerolimitsbaseball.com](https://zerolimitsbaseball.co
 
 - `/` — Home
 - `/about` — About
-- `/schedule-training` — Upper Hand scheduling mock (also `/book`, `/schedule`)
+- `/schedule-training` — Embedded booking (lesson sessions, availability, browse events, camps). Also `/book` and `/schedule`.
 - `/gallery` — Facility photos
 - `/contact` — Contact form (mailto demo)
 
@@ -22,7 +22,14 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Upper Hand URLs
 
-Copy `.env.example` to `.env.local` and set your Upper Hand links from the gym dashboard. Missing values fall back to `#` (login defaults to `https://app.upperhand.io/`).
+Copy `.env.example` to `.env.local` and set four booking embed URLs:
+
+- `NEXT_PUBLIC_UPPERHAND_PRIVATE_LESSONS_URL`
+- `NEXT_PUBLIC_UPPERHAND_GROUP_LESSONS_URL`
+- `NEXT_PUBLIC_UPPERHAND_CAMPS_URL`
+- `NEXT_PUBLIC_UPPERHAND_BROWSE_EVENTS_URL`
+
+For embedded booking, use customer-facing portal URLs (`app.upperhand.io` or `app.dbathub.com`). Raw `api.*` endpoints require an `X-Customer-Id` header and cannot load inside an iframe.
 
 ## Deploy to Vercel
 

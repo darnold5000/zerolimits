@@ -41,7 +41,7 @@ export default function Hero() {
             Schedule Training
           </Link>
           <Link
-            href="/schedule-training#programs"
+            href="/schedule-training/camps"
             className="rounded-md border-2 border-white/30 bg-white/10 px-8 py-4 text-sm font-bold uppercase tracking-wide text-white backdrop-blur transition hover:bg-white/20"
           >
             View Programs
