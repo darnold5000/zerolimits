@@ -26,6 +26,7 @@ export const metadata: Metadata = {
     icon: IMAGES.favicon,
     apple: IMAGES.favicon,
   },
+  robots: { index: false, follow: false },
 };
 
 export default function RootLayout({
