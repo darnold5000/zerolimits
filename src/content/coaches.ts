@@ -20,7 +20,7 @@ export const COACHES: Coach[] = [
     id: "derek-devaughan",
     name: "Coach Derek DeVaughan",
     role: "Owner / Instructor",
-    image: "/images/coaches/derek-devaughan.jpg",
+    image: "/images/coaches/derek-devaughan.png",
     imageAlt: "Coach Derek DeVaughan at Zero Limits Baseball",
     highlights: [
       "MHS Varsity Pitching Coach",
@@ -35,7 +35,7 @@ export const COACHES: Coach[] = [
     id: "eric-mcgaha",
     name: "Coach Eric McGaha",
     role: "Instructor",
-    image: "/images/coaches/eric-mcgaha.jpg",
+    image: "/images/coaches/eric-mcgaha.png",
     imageAlt: "Coach Eric McGaha with players at Zero Limits Baseball",
     intro:
       "Coach McGaha brings a wealth of knowledge and a proven track record of success in developing baseball players.",
@@ -51,7 +51,7 @@ export const COACHES: Coach[] = [
     id: "michael-mcavene",
     name: "Michael McAvene",
     role: "Pitching Instructor",
-    image: "/images/coaches/michael-mcavene.jpg",
+    image: "/images/coaches/michael-mcavene.png",
     imageAlt: "Michael McAvene pitching",
     intro:
       "A Mooresville native and Roncalli graduate, Michael brings professional pitching experience to every lesson.",
@@ -67,7 +67,7 @@ export const COACHES: Coach[] = [
     id: "tim-denny",
     name: "Tim Denny",
     role: "Instructor",
-    image: "/images/coaches/tim-denny.jpg",
+    image: "/images/coaches/tim-denny.png",
     imageAlt: "Tim Denny at Zero Limits Baseball",
     intro:
       "Tim combines playing, coaching, and travel-ball experience with a focus on catchers and hitters.",
@@ -83,7 +83,7 @@ export const COACHES: Coach[] = [
     id: "blake-allen",
     name: "Blake Allen",
     role: "Instructor",
-    image: "/images/coaches/blake-allen.jpg",
+    image: "/images/coaches/blake-allen.png",
     imageAlt: "Blake Allen coaching at Indiana University",
     highlights: [
       "From St. Louis, Missouri",

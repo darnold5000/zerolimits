@@ -3,6 +3,7 @@
 import Link from "next/link";
 import BookingEmbed from "@/components/booking/BookingEmbed";
 import BookingPlaceholder from "@/components/booking/BookingPlaceholder";
+import { BookingDemoPaymentHints } from "@/components/booking/BookingDemoPaymentHints";
 import PricingCard from "@/components/PricingCard";
 import {
   BOOKING_SLUGS,
@@ -73,6 +74,8 @@ export default function BookingShell({ activeSlug, links }: BookingShellProps) {
           <h2 className="font-display text-xl font-bold text-zinc-900">{active.label}</h2>
           <p className="mt-1 text-sm text-zinc-600 sm:text-base">{active.description}</p>
         </div>
+
+        <BookingDemoPaymentHints />
 
         {configured ? (
           <BookingEmbed src={embedUrl} title={`${SITE.name} — ${active.label}`} />

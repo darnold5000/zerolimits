@@ -46,15 +46,6 @@ export default function Hero() {
           >
             View Programs
           </Link>
-          <Link
-            href="/gallery"
-            className="inline-flex items-center gap-2 rounded-md px-6 py-4 text-sm font-semibold text-white transition hover:text-red-400"
-          >
-            <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/40">
-              ▶
-            </span>
-            Watch Facility Tour
-          </Link>
         </div>
       </div>
     </section>

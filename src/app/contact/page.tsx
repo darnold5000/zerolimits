@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import ContactForm from "@/components/ContactForm";
+// import ContactForm from "@/components/ContactForm";
 import FacilityMap from "@/components/FacilityMap";
 import PageCTA from "@/components/PageCTA";
 import { SITE } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Contact Us",
-  description: `Contact ${SITE.name} — call ${SITE.phone} or send a message.`,
+  description: `Contact ${SITE.name} — call ${SITE.phone} or book online.`,
 };
 
 export default function ContactPage() {
@@ -32,7 +32,7 @@ export default function ContactPage() {
               <h2 className="font-display text-3xl font-bold text-zinc-900">Reach Out</h2>
               <p className="mt-4 text-lg leading-relaxed text-zinc-600">
                 Have questions about training options, pricing, or availability?
-                Call us or send a message — we&apos;ll get back to you promptly.
+                Call us — we&apos;ll get back to you promptly.
               </p>
 
               <div className="mt-8 space-y-6">
@@ -82,18 +82,18 @@ export default function ContactPage() {
                   </Link>
                 </div>
               </div>
-
-              <div className="mt-10">
-                <FacilityMap />
-              </div>
             </div>
 
+            <FacilityMap />
+
+            {/* Send a message form — disabled for branding-only site
             <div className="rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm">
               <h2 className="font-display text-2xl font-bold text-zinc-900">Send a Message</h2>
               <div className="mt-6">
                 <ContactForm />
               </div>
             </div>
+            */}
           </div>
         </div>
       </section>
