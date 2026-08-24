@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import CoachProfile from "@/components/CoachProfile";
 import PageCTA from "@/components/PageCTA";
 import { COACHES } from "@/content/coaches";
@@ -69,6 +70,38 @@ export default function AboutPage() {
                   </p>
                 </article>
               ))}
+            </div>
+
+            <div className="mt-12 grid gap-3 min-[420px]:grid-cols-2 md:h-[480px] md:grid-cols-[3fr_2fr] md:gap-4">
+              <div className="relative h-56 overflow-hidden rounded-2xl min-[420px]:col-span-2 sm:h-64 md:col-span-1 md:h-full">
+                <Image
+                  src="/images/facility/tunnels-wide.jpg"
+                  alt="Multiple full-length training tunnels at Zero Limits Baseball"
+                  fill
+                  className="object-cover object-[50%_48%]"
+                  sizes="(max-width: 767px) 100vw, 60vw"
+                />
+              </div>
+              <div className="grid gap-3 min-[420px]:col-span-2 min-[420px]:grid-cols-2 md:col-span-1 md:grid-cols-1 md:grid-rows-2 md:gap-4">
+                <div className="relative h-40 overflow-hidden rounded-2xl min-[420px]:h-44 md:h-auto">
+                  <Image
+                    src="/images/facility/turf-training.jpg"
+                    alt="Athletes training on the turf at Zero Limits Baseball"
+                    fill
+                    className="object-cover object-[50%_52%]"
+                    sizes="(max-width: 419px) 100vw, (max-width: 767px) 50vw, 40vw"
+                  />
+                </div>
+                <div className="relative h-40 overflow-hidden rounded-2xl min-[420px]:h-44 md:h-auto">
+                  <Image
+                    src="/images/facility/catching-training.jpg"
+                    alt="Catching instruction inside a Zero Limits training tunnel"
+                    fill
+                    className="object-cover object-[50%_58%]"
+                    sizes="(max-width: 419px) 100vw, (max-width: 767px) 50vw, 40vw"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
