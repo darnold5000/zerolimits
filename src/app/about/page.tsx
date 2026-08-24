@@ -26,26 +26,49 @@ export default function AboutPage() {
 
       <section className="py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="grid items-start gap-12 lg:grid-cols-2">
-            {/* <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
-              <Image
-                src={IMAGES.about}
-                alt="Zero Limits Baseball facility"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </div> */}
-            <div>
-              <h2 className="font-display text-3xl font-bold text-zinc-900">Our Facility</h2>
-              <p className="mt-4 text-lg leading-relaxed text-zinc-600">
-                {SITE.facilityDescription}
-              </p>
-              <p className="mt-4 text-lg leading-relaxed text-zinc-600">
-                Whether you need tunnel work for hitting and pitching or open space
-                for fielding drills, rotational power training, and arm care, Zero
-                Limits Baseball is built for year-round development.
-              </p>
+          <div>
+            <h2 className="font-display text-3xl font-bold text-zinc-900">Our Facility</h2>
+            <p className="mt-4 max-w-3xl text-lg leading-relaxed text-zinc-600">
+              Built for year-round development, Zero Limits gives athletes the space
+              and equipment to train hitting, pitching, defense, and game situations.
+            </p>
+
+            <div className="mt-12 grid gap-10 md:grid-cols-3 md:gap-6 lg:gap-10">
+              {[
+                {
+                  stat: "3",
+                  title: "Full-Length Pitching Tunnels",
+                  description:
+                    "Premium mounds and dedicated space for instruction and game-like training.",
+                },
+                {
+                  stat: "3",
+                  title: "Full-Length Hitting Tunnels",
+                  description:
+                    "Spacious batting tunnels with pitching machines for individual and group training.",
+                },
+                {
+                  stat: "Full-Size",
+                  title: "Turf Infield",
+                  description:
+                    "Built for defensive drills, team practices, and live game situations year-round.",
+                },
+              ].map((feature) => (
+                <article
+                  key={feature.title}
+                  className="border-t-4 border-red-600 pt-6"
+                >
+                  <p className="font-display text-7xl font-bold uppercase leading-none tracking-tight text-red-600 sm:text-8xl md:text-7xl lg:text-8xl">
+                    {feature.stat}
+                  </p>
+                  <h3 className="mt-3 max-w-xs font-display text-2xl font-bold uppercase leading-tight tracking-wide text-zinc-900">
+                    {feature.title}
+                  </h3>
+                  <p className="mt-4 max-w-sm leading-relaxed text-zinc-600">
+                    {feature.description}
+                  </p>
+                </article>
+              ))}
             </div>
           </div>
         </div>
