@@ -3,7 +3,7 @@ const BASE = "https://zerolimitsbaseball.com/wp-content/uploads/2024/10";
 export const IMAGES = {
   logo: `${BASE}/Zero-Limits.png`,
   favicon: `${BASE}/cropped-Zero-Limits-Baseball-Favicon-Icon-192x192.png`,
-  hero: `${BASE}/Zero-Limits-Baseball-Hero-section.jpg`,
+  hero: "/images/facility/tunnels-wide.jpg",
   action: `${BASE}/WhatsApp-Image-2024-10-08-at-20.36.43_aaf2b44a-1.jpg`,
   about: `${BASE}/IMG-20241008-WA0019.jpg`,
 } as const;
