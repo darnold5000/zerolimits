@@ -1,12 +1,8 @@
-import Link from "next/link";
-
 type PricingCardProps = {
   category: string;
   title: string;
   price: number;
   note?: string;
-  bookPath?: string;
-  bookLabel?: string;
 };
 
 export default function PricingCard({
@@ -14,8 +10,6 @@ export default function PricingCard({
   title,
   price,
   note,
-  bookPath = "/schedule-training",
-  bookLabel = "Book Now",
 }: PricingCardProps) {
   return (
     <div className="flex flex-col rounded-2xl border border-zinc-200 bg-white p-7 shadow-sm transition hover:shadow-md">
@@ -30,12 +24,6 @@ export default function PricingCard({
       {note && (
         <p className="mt-3 flex-1 text-sm leading-relaxed text-zinc-500">{note}</p>
       )}
-      <Link
-        href={bookPath}
-        className="mt-6 inline-flex items-center justify-center rounded-md bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-500"
-      >
-        {bookLabel}
-      </Link>
     </div>
   );
 }

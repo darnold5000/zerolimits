@@ -6,7 +6,7 @@ A Next.js demo rebuild of [zerolimitsbaseball.com](https://zerolimitsbaseball.co
 
 - `/` — Home
 - `/about` — About
-- `/schedule-training` — Embedded booking (lesson sessions, availability, browse events, camps). Also `/book` and `/schedule`.
+- `/schedule-training` — Embedded Upper Hand portal (`/book` and `/schedule` redirect here)
 - `/gallery` — Facility photos
 - `/contact` — Contact form (mailto demo)
 

@@ -14,22 +14,17 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/book",
-        destination: "/schedule-training/private-lessons",
+        destination: "/schedule-training",
         permanent: false,
       },
       {
         source: "/schedule",
-        destination: "/schedule-training/private-lessons",
+        destination: "/schedule-training",
         permanent: false,
       },
       {
-        source: "/schedule-training/lesson-sessions",
-        destination: "/schedule-training/group-lessons",
-        permanent: false,
-      },
-      {
-        source: "/schedule-training/lesson-availability",
-        destination: "/schedule-training/private-lessons",
+        source: "/schedule-training/:type",
+        destination: "/schedule-training",
         permanent: false,
       },
     ];

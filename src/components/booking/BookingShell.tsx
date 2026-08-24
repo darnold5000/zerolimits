@@ -1,31 +1,18 @@
 "use client";
 
-import Link from "next/link";
 import BookingEmbed from "@/components/booking/BookingEmbed";
 import BookingPlaceholder from "@/components/booking/BookingPlaceholder";
 import { BookingDemoPaymentHints } from "@/components/booking/BookingDemoPaymentHints";
 import PricingCard from "@/components/PricingCard";
-import {
-  BOOKING_SLUGS,
-  BOOKING_TYPES,
-  type BookingSlug,
-  getBookingPath,
-  getEmbedUrl,
-  isBookingConfigured,
-  pricingKeyToSlug,
-} from "@/lib/booking";
+import { isPlaceholderLink } from "@/lib/links";
 import { PRICING, SITE } from "@/lib/content";
-import type { UpperHandLinks } from "@/lib/upperhand";
 
 type BookingShellProps = {
-  activeSlug: BookingSlug;
-  links: UpperHandLinks;
+  portalUrl: string;
 };
 
-export default function BookingShell({ activeSlug, links }: BookingShellProps) {
-  const active = BOOKING_TYPES[activeSlug];
-  const embedUrl = getEmbedUrl(activeSlug, links);
-  const configured = isBookingConfigured(activeSlug, links);
+export default function BookingShell({ portalUrl }: BookingShellProps) {
+  const configured = !isPlaceholderLink(portalUrl);
 
   return (
     <div className="space-y-16">
@@ -38,8 +25,8 @@ export default function BookingShell({ activeSlug, links }: BookingShellProps) {
             Schedule Training
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-zinc-300 sm:text-lg">
-            Choose your program, pick a time, and complete your booking — all right here.
-            Need help? Call{" "}
+            Browse programs, pick a time, and complete your booking in our Upper Hand
+            portal. Need help? Call{" "}
             <a href={SITE.phoneHref} className="font-semibold text-white hover:text-red-400">
               {SITE.phone}
             </a>
@@ -47,40 +34,15 @@ export default function BookingShell({ activeSlug, links }: BookingShellProps) {
           </p>
         </div>
 
-        <nav
-          className="flex gap-1 overflow-x-auto border-b border-zinc-200 bg-zinc-50 px-2 py-2 sm:px-4"
-          aria-label="Booking categories"
-        >
-          {BOOKING_SLUGS.map((slug) => {
-            const tab = BOOKING_TYPES[slug];
-            return (
-              <Link
-                key={slug}
-                href={getBookingPath(slug)}
-                className={`shrink-0 rounded-lg px-4 py-2.5 text-sm font-semibold transition ${
-                  slug === activeSlug
-                    ? "bg-white text-zinc-900 shadow-sm ring-1 ring-zinc-200"
-                    : "text-zinc-600 hover:bg-white/70 hover:text-zinc-900"
-                }`}
-                aria-current={slug === activeSlug ? "page" : undefined}
-              >
-                {tab.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="border-b border-zinc-100 bg-white px-4 py-5 sm:px-8">
-          <h2 className="font-display text-xl font-bold text-zinc-900">{active.label}</h2>
-          <p className="mt-1 text-sm text-zinc-600 sm:text-base">{active.description}</p>
-        </div>
-
         <BookingDemoPaymentHints />
 
         {configured ? (
-          <BookingEmbed src={embedUrl} title={`${SITE.name} — ${active.label}`} />
+          <BookingEmbed src={portalUrl} title={`${SITE.name} — Schedule Training`} />
         ) : (
-          <BookingPlaceholder title={active.label} description={active.description} />
+          <BookingPlaceholder
+            title="Schedule Training"
+            description="Private lessons, group lessons, camps, and events."
+          />
         )}
       </section>
 
@@ -104,7 +66,6 @@ export default function BookingShell({ activeSlug, links }: BookingShellProps) {
               title={item.title}
               price={item.price}
               note={item.note}
-              bookPath={getBookingPath(pricingKeyToSlug(item.lessonKey))}
             />
           ))}
         </div>

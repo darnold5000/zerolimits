@@ -1,3 +1,5 @@
+import { isPlaceholderLink } from "@/lib/links";
+
 export type UpperHandLinks = {
   privateLessons: string;
   groupLessons: string;
@@ -17,4 +19,20 @@ export function getUpperHandLinks(): UpperHandLinks {
     camps: envOrFallback("NEXT_PUBLIC_UPPERHAND_CAMPS_URL"),
     browseEvents: envOrFallback("NEXT_PUBLIC_UPPERHAND_BROWSE_EVENTS_URL"),
   };
+}
+
+/** Single customer portal URL for embedded booking (class types live in Upper Hand). */
+export function getUpperHandPortalUrl(): string {
+  const links = getUpperHandLinks();
+  const candidates = [
+    links.browseEvents,
+    links.privateLessons,
+    links.groupLessons,
+    links.camps,
+  ];
+  return candidates.find((url) => !isPlaceholderLink(url)) ?? "#";
+}
+
+export function isUpperHandConfigured(): boolean {
+  return !isPlaceholderLink(getUpperHandPortalUrl());
 }

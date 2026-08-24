@@ -5,7 +5,6 @@ import TestimonialCard from "@/components/TestimonialCard";
 import TrainingPillars from "@/components/TrainingPillars";
 import TrustBar from "@/components/TrustBar";
 import WhyChoose from "@/components/WhyChoose";
-import { getBookingPath, pricingKeyToSlug } from "@/lib/booking";
 import { PRICING, TESTIMONIALS } from "@/lib/content";
 import Link from "next/link";
 
@@ -38,7 +37,6 @@ export default function HomePage() {
                 title={item.title}
                 price={item.price}
                 note={item.note}
-                bookPath={getBookingPath(pricingKeyToSlug(item.lessonKey))}
               />
             ))}
           </div>
