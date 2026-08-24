@@ -9,6 +9,7 @@ export type Coach = {
   role: string;
   image: string;
   imageAlt: string;
+  imageClass?: string;
   intro?: string;
   highlights?: string[];
   sections?: CoachSection[];
@@ -69,6 +70,7 @@ export const COACHES: Coach[] = [
     role: "Instructor",
     image: "/images/coaches/tim-denny.png",
     imageAlt: "Tim Denny at Zero Limits Baseball",
+    imageClass: "aspect-[3/4] w-full object-contain",
     intro:
       "Tim combines playing, coaching, and travel-ball experience with a focus on catchers and hitters.",
     highlights: [
@@ -85,6 +87,7 @@ export const COACHES: Coach[] = [
     role: "Instructor",
     image: "/images/coaches/blake-allen.png",
     imageAlt: "Blake Allen coaching at Indiana University",
+    imageClass: "aspect-[3/4] w-full object-contain",
     highlights: [
       "From St. Louis, Missouri",
       "Graduated from Blackburn College in Illinois",

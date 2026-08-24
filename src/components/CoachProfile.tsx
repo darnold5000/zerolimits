@@ -28,7 +28,9 @@ export default function CoachProfile({
           height={384}
           loading={priority ? "eager" : "lazy"}
           decoding="async"
-          className="aspect-[4/3] w-full object-cover object-top"
+          className={
+            coach.imageClass ?? "aspect-[4/3] w-full object-cover object-top"
+          }
         />
       </div>
 

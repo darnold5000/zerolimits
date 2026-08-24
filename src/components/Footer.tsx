@@ -43,6 +43,12 @@ export default function Footer() {
                 {SITE.phone}
               </a>
             </p>
+            <Link
+              href="/schedule-training"
+              className="mt-4 inline-block rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500"
+            >
+              Schedule Training
+            </Link>
           </div>
         </div>
 

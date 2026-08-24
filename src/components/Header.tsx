@@ -99,6 +99,15 @@ export default function Header() {
             );
           })}
         </nav>
+
+        <div className="hidden shrink-0 xl:flex">
+          <Link
+            href="/schedule-training"
+            className="rounded-md bg-red-600 px-5 py-2.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
+          >
+            Schedule Training
+          </Link>
+        </div>
       </div>
     </header>
   );

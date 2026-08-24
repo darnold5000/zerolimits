@@ -22,12 +22,14 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Upper Hand URLs
 
-Copy `.env.example` to `.env.local` and set four booking embed URLs:
+Copy `.env.example` to `.env.local` and set the Upper Hand customer portal URL (all four vars can use the same events page):
 
 - `NEXT_PUBLIC_UPPERHAND_PRIVATE_LESSONS_URL`
 - `NEXT_PUBLIC_UPPERHAND_GROUP_LESSONS_URL`
 - `NEXT_PUBLIC_UPPERHAND_CAMPS_URL`
 - `NEXT_PUBLIC_UPPERHAND_BROWSE_EVENTS_URL`
+
+Production portal: `https://app.upperhand.io/customers/2841-zero-limits/events`
 
 For embedded booking, use customer-facing portal URLs (`app.upperhand.io` or `app.dbathub.com`). Raw `api.*` endpoints require an `X-Customer-Id` header and cannot load inside an iframe.
 
