@@ -5,7 +5,7 @@ import TestimonialCard from "@/components/TestimonialCard";
 import TrainingPillars from "@/components/TrainingPillars";
 import TrustBar from "@/components/TrustBar";
 import WhyChoose from "@/components/WhyChoose";
-import { PRICING, TESTIMONIALS } from "@/lib/content";
+import { PRICING, PRICING_NOTE, TESTIMONIALS } from "@/lib/content";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -29,17 +29,19 @@ export default function HomePage() {
               Private and group lessons for every schedule and budget.
             </p>
           </div>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid gap-6 lg:grid-cols-2">
             {PRICING.map((item) => (
               <PricingCard
                 key={item.id}
                 category={item.category}
-                title={item.title}
-                price={item.price}
-                note={item.note}
+                rates={item.rates}
               />
             ))}
           </div>
+          <p className="mt-6 text-center text-sm text-zinc-600">
+            <span className="font-semibold text-zinc-900">Sibling discount:</span>{" "}
+            {PRICING_NOTE}
+          </p>
           <div className="mt-12 text-center">
             <Link
               href="/schedule-training"

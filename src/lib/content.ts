@@ -85,38 +85,29 @@ export const COACHES = [
 
 export const PRICING = [
   {
-    id: "private-1hr",
-    category: "Private Lessons",
-    title: "1 Hour",
-    price: 65,
-    note: "After 1 hr, each additional 1/2 hr is $20 if done on same day",
+    id: "private",
+    category: "1:1 Training",
+    rates: [
+      { duration: "30 Min", price: 50 },
+      { duration: "60 Min", price: 75 },
+      { duration: "90 Min", price: 125 },
+    ],
     lessonKey: "privateLesson" as const,
   },
   {
-    id: "private-30min",
-    category: "Private Lessons",
-    title: "1/2 Hour",
-    price: 45,
-    note: "After 1 hr, each additional 1/2 hr is $20 if done on same day",
-    lessonKey: "privateLesson" as const,
-  },
-  {
-    id: "group-1hr",
-    category: "Group Lessons",
-    title: "1 Hour",
-    price: 40,
-    note: "After 1 hr, each additional 1/2 hr is $20 if done on same day",
-    lessonKey: "groupLesson" as const,
-  },
-  {
-    id: "group-30min",
-    category: "Group Lessons",
-    title: "1/2 Hour",
-    price: 30,
-    note: "After 1 hr, each additional 1/2 hr is $20 if done on same day",
+    id: "group",
+    category: "Group Training",
+    rates: [
+      { duration: "30 Min", price: 25 },
+      { duration: "60 Min", price: 50 },
+      { duration: "90 Min", price: 75 },
+    ],
     lessonKey: "groupLesson" as const,
   },
 ] as const;
+
+export const PRICING_NOTE =
+  "20% off when siblings attend during the same week.";
 
 export const TESTIMONIALS = [
   {

@@ -5,7 +5,7 @@ import BookingPlaceholder from "@/components/booking/BookingPlaceholder";
 import { BookingDemoPaymentHints } from "@/components/booking/BookingDemoPaymentHints";
 import PricingCard from "@/components/PricingCard";
 import { isPlaceholderLink } from "@/lib/links";
-import { PRICING, SITE } from "@/lib/content";
+import { PRICING, PRICING_NOTE, SITE } from "@/lib/content";
 
 type BookingShellProps = {
   portalUrl: string;
@@ -58,17 +58,19 @@ export default function BookingShell({ portalUrl }: BookingShellProps) {
             Hitting, pitching, catching, fielding &amp; throwing — all at the training center.
           </p>
         </div>
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-6 lg:grid-cols-2">
           {PRICING.map((item) => (
             <PricingCard
               key={item.id}
               category={item.category}
-              title={item.title}
-              price={item.price}
-              note={item.note}
+              rates={item.rates}
             />
           ))}
         </div>
+        <p className="mt-6 text-center text-sm text-zinc-600">
+          <span className="font-semibold text-zinc-900">Sibling discount:</span>{" "}
+          {PRICING_NOTE}
+        </p>
       </section>
     </div>
   );
