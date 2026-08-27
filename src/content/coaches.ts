@@ -21,7 +21,7 @@ export const COACHES: Coach[] = [
     id: "derek-devaughan",
     name: "Coach Derek DeVaughan",
     role: "Owner / Instructor",
-    image: "/images/coaches/derek-devaughan.png",
+    image: "/images/coaches/derek-devaughan.jpg",
     imageAlt: "Coach Derek DeVaughan at Zero Limits Baseball",
     highlights: [
       "MHS Varsity Pitching Coach",
