@@ -23,6 +23,7 @@ export const COACHES: Coach[] = [
     role: "Owner / Instructor",
     image: "/images/coaches/derek-devaughan.jpg",
     imageAlt: "Coach Derek DeVaughan at Zero Limits Baseball",
+    imageClass: "aspect-[3/4] w-full object-cover object-top",
     highlights: [
       "MHS Varsity Pitching Coach",
       "15+ years coaching experience",
