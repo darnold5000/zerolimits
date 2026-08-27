@@ -16,8 +16,8 @@ export default function CoachProfile({
       <div
         className={
           reverse
-            ? "overflow-hidden rounded-2xl bg-zinc-800 lg:col-start-2"
-            : "overflow-hidden rounded-2xl bg-zinc-800"
+            ? `overflow-hidden rounded-2xl bg-zinc-800 lg:col-start-2${coach.imageWrapperClass ? ` ${coach.imageWrapperClass}` : ""}`
+            : `overflow-hidden rounded-2xl bg-zinc-800${coach.imageWrapperClass ? ` ${coach.imageWrapperClass}` : ""}`
         }
       >
         {/* Native img avoids Next image optimizer reflows on long coach pages */}
