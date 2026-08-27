@@ -11,6 +11,8 @@ export type Coach = {
   imageAlt: string;
   imageClass?: string;
   imageWrapperClass?: string;
+  imageWidth?: number;
+  imageHeight?: number;
   intro?: string;
   highlights?: string[];
   sections?: CoachSection[];
@@ -24,8 +26,10 @@ export const COACHES: Coach[] = [
     role: "Owner / Instructor",
     image: "/images/coaches/derek-devaughan.jpg",
     imageAlt: "Coach Derek DeVaughan at Zero Limits Baseball",
+    imageWidth: 196,
+    imageHeight: 426,
     imageWrapperClass: "mx-auto w-fit max-w-full",
-    imageClass: "block h-auto max-h-80 w-auto max-w-[220px] object-contain sm:max-w-[240px]",
+    imageClass: "block h-auto w-[196px] max-w-full object-contain",
     highlights: [
       "MHS Varsity Pitching Coach",
       "15+ years coaching experience",

@@ -24,8 +24,8 @@ export default function CoachProfile({
         <img
           src={coach.image}
           alt={coach.imageAlt}
-          width={512}
-          height={384}
+          width={coach.imageWidth ?? 512}
+          height={coach.imageHeight ?? 384}
           loading={priority ? "eager" : "lazy"}
           decoding="async"
           className={
