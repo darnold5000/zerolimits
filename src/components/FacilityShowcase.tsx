@@ -9,7 +9,7 @@ function FacilityFeatures({
   return (
     <div className="mt-10 grid gap-10 md:grid-cols-3 md:gap-6 lg:gap-10">
       {features.map((feature) => (
-        <article key={feature.title} className="border-t-4 border-red-600 pt-6">
+        <article key={feature.title} className="pt-2">
           <p className="font-display text-5xl font-bold uppercase leading-none tracking-tight text-red-600 sm:text-6xl md:text-5xl lg:text-6xl">
             {feature.stat}
           </p>
@@ -45,6 +45,11 @@ function FacilityImages({
               alt={image.alt}
               fill
               className="object-cover"
+              style={
+                "imagePosition" in image && image.imagePosition
+                  ? { objectPosition: image.imagePosition }
+                  : undefined
+              }
               sizes="(max-width: 640px) 100vw, 50vw"
             />
           </div>
@@ -65,6 +70,11 @@ function FacilityImages({
             alt={image.alt}
             fill
             className="object-cover"
+            style={
+              "imagePosition" in image && image.imagePosition
+                ? { objectPosition: image.imagePosition }
+                : undefined
+            }
             sizes="(max-width: 640px) 100vw, 33vw"
           />
         </div>
@@ -89,7 +99,7 @@ export default function FacilityShowcase() {
         <div className="mt-16 space-y-20 sm:space-y-24">
           {FACILITIES.map((facility) => (
             <div key={facility.id}>
-              <div className="border-b-4 border-red-600 pb-4">
+              <div className="pb-4">
                 <h3 className="font-display text-5xl font-bold uppercase tracking-tight text-red-600 sm:text-6xl">
                   {facility.name}
                 </h3>

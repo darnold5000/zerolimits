@@ -74,6 +74,47 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="bg-white py-20 sm:py-24">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <h2 className="font-display text-3xl font-bold text-zinc-900 sm:text-4xl">
+            Training Philosophy
+          </h2>
+          <div className="mt-10 grid gap-8 md:grid-cols-3">
+            {[
+              {
+                title: "Player-First Coaching",
+                body: "Our coaches take the time to understand each athlete's goals and build a plan that fits their level and schedule.",
+              },
+              {
+                title: "Consistent Development",
+                body: "Year-round indoor training means players keep improving through every season — not just when the weather cooperates.",
+              },
+              {
+                title: "Accessible Pricing",
+                body: "Private and group lesson options help families train on a regular regimen without breaking the bank.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="rounded-2xl border border-zinc-200 bg-zinc-50 p-8">
+                <h3 className="font-display text-xl font-bold text-zinc-900">{item.title}</h3>
+                <p className="mt-3 leading-relaxed text-zinc-600">{item.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-zinc-50 py-20 sm:py-24">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <h2 className="font-display text-3xl font-bold text-zinc-900 sm:text-4xl">Who We Serve</h2>
+          <p className="mt-4 max-w-3xl text-lg leading-relaxed text-zinc-600">
+            Zero Limits Baseball works with players of all ages and abilities —
+            youth athletes learning the fundamentals, high school players sharpening
+            their skills, and anyone serious about getting better at hitting,
+            pitching, catching, or fielding.
+          </p>
+        </div>
+      </section>
+
       <FacilityRental />
 
       <PageCTA />

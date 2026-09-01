@@ -167,6 +167,7 @@ export const FACILITIES = [
       {
         src: "/images/facility/zl1-group-training.jpg",
         alt: "Group training session at Zero Limits Baseball ZL1",
+        imagePosition: "72% center",
       },
       {
         src: "/images/facility/zl1-pitching.jpg",
