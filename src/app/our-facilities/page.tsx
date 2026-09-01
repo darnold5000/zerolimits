@@ -19,7 +19,9 @@ export default function OurFacilitiesPage() {
           </p>
           <h1 className="mt-3 font-display text-5xl font-bold sm:text-6xl">Our Facilities</h1>
           <p className="mt-5 max-w-3xl text-xl leading-relaxed text-zinc-300">
-            {SITE.heroRegionLine}
+            {SITE.heroRegionLine} Built for year-round development, Zero Limits gives athletes
+            the space and equipment to train hitting, pitching, defense, and game situations at
+            both of our indoor locations.
           </p>
         </div>
       </section>

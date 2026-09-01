@@ -87,18 +87,7 @@ export default function FacilityShowcase() {
   return (
     <section className="py-20 sm:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="border-b-4 border-red-600 pb-4">
-          <h2 className="font-display text-3xl font-bold text-zinc-900 sm:text-4xl">
-            Our Facilities
-          </h2>
-        </div>
-        <p className="mt-4 max-w-3xl text-lg leading-relaxed text-zinc-600">
-          Built for year-round development, Zero Limits gives athletes the space and
-          equipment to train hitting, pitching, defense, and game situations at both
-          of our indoor locations.
-        </p>
-
-        <div className="mt-16 space-y-20 sm:space-y-24">
+        <div className="space-y-20 sm:space-y-24">
           {FACILITIES.map((facility) => (
             <div key={facility.id}>
               <div className="border-b-4 border-red-600 pb-4">
