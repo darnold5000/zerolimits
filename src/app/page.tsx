@@ -1,5 +1,4 @@
 import Hero from "@/components/Hero";
-import FacilityRental from "@/components/FacilityRental";
 import PageCTA from "@/components/PageCTA";
 import PricingCard from "@/components/PricingCard";
 import TestimonialCard from "@/components/TestimonialCard";
@@ -52,28 +51,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-zinc-50 py-20 sm:py-24">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-red-600">
-              Parent Reviews
-            </p>
-            <h2 className="mt-3 font-display text-4xl font-bold text-zinc-900 sm:text-5xl">
-              What Families Are Saying
-            </h2>
-          </div>
-          <div className="mx-auto mt-12 grid max-w-4xl gap-6 md:grid-cols-2">
-            {TESTIMONIALS.map((testimonial) => (
-              <TestimonialCard
-                key={testimonial.author}
-                quote={testimonial.quote}
-                author={testimonial.author}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="bg-white py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <h2 className="font-display text-3xl font-bold text-zinc-900 sm:text-4xl">
@@ -115,7 +92,27 @@ export default function HomePage() {
         </div>
       </section>
 
-      <FacilityRental />
+      <section className="bg-white py-20 sm:py-24">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-red-600">
+              Parent Reviews
+            </p>
+            <h2 className="mt-3 font-display text-4xl font-bold text-zinc-900 sm:text-5xl">
+              What Families Are Saying
+            </h2>
+          </div>
+          <div className="mx-auto mt-12 grid max-w-4xl gap-6 md:grid-cols-2">
+            {TESTIMONIALS.map((testimonial) => (
+              <TestimonialCard
+                key={testimonial.author}
+                quote={testimonial.quote}
+                author={testimonial.author}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
 
       <PageCTA />
     </>
