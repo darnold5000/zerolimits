@@ -1,4 +1,4 @@
-import Link from "next/link";
+import BookFacilityButton from "@/components/BookFacilityButton";
 import { FACILITY_RENTAL } from "@/lib/content";
 
 type FacilityRentalProps = {
@@ -45,12 +45,7 @@ export default function FacilityRental({ showBookLink = true }: FacilityRentalPr
 
         {showBookLink ? (
           <div className="mt-10 flex flex-wrap gap-4">
-            <Link
-              href="/schedule-training"
-              className="inline-flex rounded-md bg-red-600 px-8 py-4 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
-            >
-              Book Facility
-            </Link>
+            <BookFacilityButton />
           </div>
         ) : null}
       </div>

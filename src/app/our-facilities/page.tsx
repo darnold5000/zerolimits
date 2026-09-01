@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import BookFacilityButton from "@/components/BookFacilityButton";
 import FacilityRental from "@/components/FacilityRental";
 import FacilityShowcase from "@/components/FacilityShowcase";
 import PageCTA from "@/components/PageCTA";
@@ -23,6 +24,9 @@ export default function OurFacilitiesPage() {
             the space and equipment to train hitting, pitching, defense, and game situations at
             both of our indoor locations.
           </p>
+          <div className="mt-8">
+            <BookFacilityButton />
+          </div>
         </div>
       </section>
 
