@@ -64,7 +64,7 @@ export default function HomePage() {
               What Families Are Saying
             </h2>
           </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
+          <div className="mx-auto mt-12 grid max-w-4xl gap-6 md:grid-cols-2">
             {TESTIMONIALS.map((testimonial) => (
               <TestimonialCard
                 key={testimonial.author}

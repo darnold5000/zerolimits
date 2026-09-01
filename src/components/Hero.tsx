@@ -20,7 +20,7 @@ export default function Hero() {
       </div>
 
       <div className="relative mx-auto flex min-h-[85vh] max-w-6xl flex-col items-center justify-center px-4 py-24 text-center sm:px-6 sm:py-32">
-        <p className="text-sm font-semibold uppercase tracking-[0.25em] text-red-400 drop-shadow-sm">
+        <p className="text-sm font-bold uppercase tracking-[0.25em] text-red-500 drop-shadow-sm">
           {SITE.name}
         </p>
         <h1 className="mx-auto mt-4 max-w-4xl font-display text-5xl font-bold leading-[0.95] tracking-tight drop-shadow-md sm:text-6xl lg:text-7xl xl:text-8xl">

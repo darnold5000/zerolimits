@@ -18,20 +18,20 @@ function TrainingSkillCard({
   imagePosition?: string;
 }) {
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 transition hover:border-red-200 hover:bg-white hover:shadow-lg">
-      <div className="relative aspect-[5/6] w-full overflow-hidden sm:aspect-[4/5]">
+    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 transition hover:border-red-200 hover:bg-white hover:shadow-lg sm:flex-row">
+      <div className="relative mx-auto aspect-[4/5] w-full max-w-[10rem] shrink-0 overflow-hidden sm:mx-0 sm:w-36 md:w-40">
         <Image
           src={image}
           alt={imageAlt}
           fill
-          className="object-cover transition duration-300 group-hover:scale-105"
+          className="object-cover"
           style={{ objectPosition: imagePosition }}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          sizes="(max-width: 640px) 160px, 160px"
         />
       </div>
-      <div className="flex flex-1 flex-col p-6 sm:p-8">
-        <h3 className="font-display text-2xl font-bold text-zinc-900">{title}</h3>
-        <p className="mt-3 text-base leading-relaxed text-zinc-600">{description}</p>
+      <div className="flex flex-1 flex-col p-5 sm:p-6">
+        <h3 className="font-display text-xl font-bold text-zinc-900 sm:text-2xl">{title}</h3>
+        <p className="mt-2 text-sm leading-relaxed text-zinc-600 sm:text-base">{description}</p>
       </div>
     </article>
   );
@@ -64,25 +64,23 @@ export default function TrainingPillars() {
         </div>
 
         {widePillar ? (
-          <article className="mt-6 overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 transition hover:border-red-200 hover:bg-white hover:shadow-lg">
-            <div className="grid lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-              <div className="relative aspect-[16/10] lg:aspect-auto lg:min-h-[280px]">
-                <Image
-                  src={widePillar.image}
-                  alt={widePillar.imageAlt}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 40vw"
-                />
-              </div>
-              <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
-                <h3 className="font-display text-2xl font-bold text-zinc-900 sm:text-3xl">
-                  {widePillar.title}
-                </h3>
-                <p className="mt-3 max-w-3xl text-base leading-relaxed text-zinc-600">
-                  {widePillar.description}
-                </p>
-              </div>
+          <article className="mt-6 flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 transition hover:border-red-200 hover:bg-white hover:shadow-lg sm:flex-row">
+            <div className="relative mx-auto aspect-[4/5] w-full max-w-[10rem] shrink-0 overflow-hidden sm:mx-0 sm:w-36 md:w-40">
+              <Image
+                src={widePillar.image}
+                alt={widePillar.imageAlt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 640px) 160px, 160px"
+              />
+            </div>
+            <div className="flex flex-1 flex-col justify-center p-5 sm:p-6 lg:p-8">
+              <h3 className="font-display text-xl font-bold text-zinc-900 sm:text-2xl">
+                {widePillar.title}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-zinc-600 sm:text-base">
+                {widePillar.description}
+              </p>
             </div>
           </article>
         ) : null}
