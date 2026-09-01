@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 // import ContactForm from "@/components/ContactForm";
 import FacilityMap from "@/components/FacilityMap";
+import FacilityRental from "@/components/FacilityRental";
 import PageCTA from "@/components/PageCTA";
 import { SITE } from "@/lib/content";
 
@@ -97,6 +98,8 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
+
+      <FacilityRental showContactLink={false} />
 
       <PageCTA />
     </>

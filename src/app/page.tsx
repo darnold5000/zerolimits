@@ -1,4 +1,5 @@
 import Hero from "@/components/Hero";
+import FacilityRental from "@/components/FacilityRental";
 import PageCTA from "@/components/PageCTA";
 import PricingCard from "@/components/PricingCard";
 import TestimonialCard from "@/components/TestimonialCard";
@@ -74,6 +75,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <FacilityRental />
 
       <PageCTA />
     </>

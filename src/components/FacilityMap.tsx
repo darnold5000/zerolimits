@@ -14,28 +14,11 @@ export default function FacilityMap() {
       <iframe
         title="Zero Limits Baseball at Core Fitness Club, Mooresville"
         src={getMapEmbedUrl()}
-        className="h-72 w-full border-0"
+        className="h-full min-h-[28rem] w-full border-0"
         loading="lazy"
         referrerPolicy="no-referrer-when-downgrade"
         allowFullScreen
       />
-      <div className="border-t border-zinc-100 px-5 py-4">
-        <p className="text-sm font-semibold text-zinc-900">Location</p>
-        <p className="mt-1 font-medium text-zinc-800">{SITE.address.venue}</p>
-        <p className="mt-1 text-sm text-zinc-600">
-          {SITE.address.street}
-          <br />
-          {SITE.address.city}, {SITE.address.state} {SITE.address.zip}
-        </p>
-        <ul className="mt-4 space-y-3 border-t border-zinc-100 pt-4">
-          {SITE.facilityLocations.map((location) => (
-            <li key={location.name} className="text-sm text-zinc-600">
-              <span className="font-semibold text-zinc-900">{location.name}</span>
-              <span className="mt-0.5 block">{location.description}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
     </div>
   );
 }

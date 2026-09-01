@@ -30,7 +30,7 @@ export const SITE = {
     "The facility includes a full-length hitting and pitching tunnel. We can also accommodate open-area fielding, rotational power, arm care, and more.",
   heroHeadline: "Train Without Limits.",
   heroSubheadline:
-    "Private instruction, hitting, pitching, catching and player development for athletes of every level.",
+    "At Zero Limits, we offer both group and private instruction designed to develop complete, confident, and athletic baseball players.",
   heroRegionLine:
     "Central Indiana's premier indoor baseball training facility for hitters, pitchers, catchers, and fielders.",
 } as const;
@@ -46,23 +46,60 @@ export const TRUST_ITEMS = [
 export const TRAINING_PILLARS = [
   {
     title: "Hitting",
-    description: "Private and group instruction.",
-    icon: "hitting",
+    description:
+      "Our group and private hitting lessons focus on developing a complete, confident hitter. Athletes receive instruction in proper mechanics, balance, timing, bat speed, pitch recognition, approach, and consistent hard contact. Each lesson is designed around the athlete's individual needs, with drills and coaching that help build an efficient, repeatable swing that translates to game performance.",
+    image: "/images/training/hitting.jpg",
+    imageAlt: "Baseball hitter in follow-through at home plate",
+    layout: "standard",
   },
   {
     title: "Pitching",
-    description: "Mechanics and velocity development.",
-    icon: "pitching",
+    description:
+      "Our group and private pitching lessons focus on developing confident, efficient, and consistent pitchers. Instruction includes proper mechanics, balance, direction, command, velocity development, pitch execution, and game approach. Each athlete receives age-appropriate training based on individual needs, along with arm-care and strengthening exercises designed to support healthy development and improve performance on the mound.",
+    image: "/images/training/pitching.jpg",
+    imageAlt: "Pitcher delivering a pitch with catcher behind home plate",
+    layout: "standard",
   },
   {
     title: "Catching",
-    description: "Receiving, blocking and throwing.",
-    icon: "catching",
+    description:
+      "Our group and private catching lessons focus on developing confident, skilled, and dependable catchers. Instruction includes receiving, blocking, throwing mechanics, footwork, transfers, pitch presentation, game awareness, and leadership. Each lesson uses position-specific and game-like drills to improve quickness, consistency, arm strength, and overall performance behind the plate.",
+    image: "/images/training/catching.jpg",
+    imageAlt: "Catcher in ready stance behind home plate",
+    layout: "standard",
   },
   {
     title: "Fielding",
-    description: "Defensive development and agility.",
-    icon: "fielding",
+    description:
+      "Our group and private fielding lessons focus on developing confident, fundamentally sound defenders. Instruction includes proper footwork, glove work, fielding position, throwing mechanics, transfers, angles, range, and decision-making. Each lesson uses game-like drills and individual coaching to improve consistency, quickness, and overall defensive performance.",
+    image: "/images/training/fielding.jpg",
+    imageAlt: "Infielder fielding a ground ball",
+    layout: "standard",
+  },
+  {
+    title: "Sports Performance",
+    description:
+      "Our sports performance training helps athletes become stronger, faster, more explosive, and better prepared for competition. Training includes strength and conditioning, speed and agility, mobility and flexibility, rotational power, explosive movements, core development, and injury-risk reduction. Each athlete receives age-appropriate coaching focused on proper technique, improved athletic movement, and building strength and power that transfer directly to game performance.",
+    image: "/images/training/sports-performance.jpg",
+    imageAlt: "Athlete performing sled push strength training",
+    layout: "wide",
+  },
+] as const;
+
+export const FACILITY_RENTAL = [
+  {
+    id: "zl1",
+    name: "Zero Limits 1 (ZL1)",
+    shortName: "ZL1",
+    pricePerHour: 60,
+    building: "Small building",
+  },
+  {
+    id: "zl2",
+    name: "Zero Limits 2 (ZL2)",
+    shortName: "ZL2",
+    pricePerHour: 100,
+    building: "Large building",
   },
 ] as const;
 
