@@ -5,7 +5,7 @@ import { SITE } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Gallery",
-  description: `Photos from ${SITE.name} indoor training facility.`,
+  description: `Photos from ${SITE.name} indoor training facilities.`,
 };
 
 export default function GalleryPage() {
@@ -18,7 +18,7 @@ export default function GalleryPage() {
           </p>
           <h1 className="mt-3 font-display text-5xl font-bold sm:text-6xl">Gallery</h1>
           <p className="mt-5 max-w-2xl text-xl text-zinc-300">
-            A look inside our year-round indoor training facility.
+            A look inside our year-round indoor training facilities.
           </p>
         </div>
       </section>

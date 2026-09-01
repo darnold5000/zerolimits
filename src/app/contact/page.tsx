@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 // import ContactForm from "@/components/ContactForm";
 import FacilityMap from "@/components/FacilityMap";
-import FacilityRental from "@/components/FacilityRental";
 import PageCTA from "@/components/PageCTA";
 import { SITE } from "@/lib/content";
 
@@ -32,7 +31,7 @@ export default function ContactPage() {
             <div>
               <h2 className="font-display text-3xl font-bold text-zinc-900">Reach Out</h2>
               <p className="mt-4 text-lg leading-relaxed text-zinc-600">
-                Have questions about training options, pricing, or availability?
+                Have questions about training options or availability?
                 Call us — we&apos;ll get back to you promptly.
               </p>
 
@@ -98,8 +97,6 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
-
-      <FacilityRental showContactLink={false} />
 
       <PageCTA />
     </>

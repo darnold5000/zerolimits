@@ -28,10 +28,12 @@ export const COACHES: Coach[] = [
     imageAlt: "Coach Derek DeVaughan at Zero Limits Baseball",
     imageClass: "aspect-[3/4] w-full object-contain",
     highlights: [
-      "MHS Varsity Pitching Coach",
-      "15+ years coaching experience",
+      "20+ years of coaching experience",
+      "20 years of personal, group, and sports performance training",
+      "High School Varsity Assistant coaching experience",
       "Drafted by the Toronto Blue Jays",
       "Played collegiate baseball at Seminole State College, University of Florida, and Southwestern Oklahoma State University",
+      "Former professional strongman; competed in the 2016 and 2017 World's Strongest Man competitions",
     ],
     intro:
       "Between his playing days and his time coaching, Derek brings a wealth of knowledge and game experience to each player.",
@@ -82,7 +84,7 @@ export const COACHES: Coach[] = [
       "Independent pro experience with the Newark Buffalos (Frontier League)",
       "Five seasons on staff at Mooresville High School — 2024 Class 4A State Runner-Up",
       "Two sectional titles and three Mid-State Conference championships (2022–2024)",
-      "Ten seasons of travel baseball; one year instructing at Zero Limits Baseball",
+      "Ten seasons of travel baseball; two years instructing at Zero Limits Baseball",
     ],
   },
   {

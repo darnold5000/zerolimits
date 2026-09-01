@@ -4,7 +4,6 @@ import PageCTA from "@/components/PageCTA";
 import PricingCard from "@/components/PricingCard";
 import TestimonialCard from "@/components/TestimonialCard";
 import TrainingPillars from "@/components/TrainingPillars";
-import TrustBar from "@/components/TrustBar";
 import WhyChoose from "@/components/WhyChoose";
 import { PRICING, PRICING_NOTE, TESTIMONIALS } from "@/lib/content";
 import Link from "next/link";
@@ -13,7 +12,6 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <TrustBar />
       <TrainingPillars />
       <WhyChoose />
 

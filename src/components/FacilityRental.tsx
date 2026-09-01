@@ -2,10 +2,10 @@ import Link from "next/link";
 import { FACILITY_RENTAL } from "@/lib/content";
 
 type FacilityRentalProps = {
-  showContactLink?: boolean;
+  showBookLink?: boolean;
 };
 
-export default function FacilityRental({ showContactLink = true }: FacilityRentalProps) {
+export default function FacilityRental({ showBookLink = true }: FacilityRentalProps) {
   return (
     <section className="bg-zinc-50 py-20 sm:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -43,13 +43,13 @@ export default function FacilityRental({ showContactLink = true }: FacilityRenta
           ))}
         </div>
 
-        {showContactLink ? (
+        {showBookLink ? (
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
-              href="/contact"
+              href="/schedule-training"
               className="inline-flex rounded-md bg-red-600 px-8 py-4 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
             >
-              Contact Us
+              Book Facility
             </Link>
           </div>
         ) : null}

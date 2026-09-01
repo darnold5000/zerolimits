@@ -9,7 +9,7 @@ export default function PageCTA() {
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-lg text-red-100">
           Book your first lesson today and start training at Central Indiana&apos;s
-          premier indoor baseball facility.
+          premier indoor baseball facilities.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           <Link

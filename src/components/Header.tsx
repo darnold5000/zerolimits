@@ -17,13 +17,6 @@ function isNavActive(pathname: string, currentHash: string, href: string): boole
 
   const onPath = pathname === path || pathname.startsWith(`${path}/`);
 
-  if (path === "/about") {
-    if (targetHash) {
-      return onPath && currentHash === targetHash;
-    }
-    return onPath && currentHash !== "#our-coaches";
-  }
-
   if (targetHash) {
     return onPath && currentHash === targetHash;
   }

@@ -16,7 +16,7 @@ export default function WhyChoose() {
               Why Families Choose Zero Limits
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-zinc-400">
-              {SITE.facilityDescription}
+              {SITE.facilitiesDescription}
             </p>
             <ul className="mt-8 space-y-4">
               {WHY_CHOOSE.map((item) => (

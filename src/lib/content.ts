@@ -25,18 +25,18 @@ export const SITE = {
     },
   ],
   tagline:
-    "Zero Limits Baseball is a year-round indoor facility where players of all ages and abilities train.",
-  facilityDescription:
-    "The facility includes a full-length hitting and pitching tunnel. We can also accommodate open-area fielding, rotational power, arm care, and more.",
+    "Zero Limits Baseball provides year-round indoor facilities where players of all ages and abilities train.",
+  facilitiesDescription:
+    "Our facilities include full-length hitting and pitching tunnels, open turf training areas, and space for fielding, rotational power, arm care, and more.",
   heroHeadline: "Train Without Limits.",
   heroSubheadline:
     "At Zero Limits, we offer both group and private instruction designed to develop complete, confident, and athletic baseball players.",
   heroRegionLine:
-    "Central Indiana's premier indoor baseball training facility for hitters, pitchers, catchers, and fielders.",
+    "Central Indiana's premier indoor baseball training facilities for hitters, pitchers, catchers, and fielders.",
 } as const;
 
 export const TRUST_ITEMS = [
-  { label: "Year-Round Indoor Facility", icon: "facility" },
+  { label: "Year-Round Indoor Facilities", icon: "facility" },
   { label: "Private Lessons", icon: "private" },
   { label: "Group Training", icon: "group" },
   { label: "Youth & High School Players", icon: "players" },
@@ -107,6 +107,80 @@ export const FACILITY_RENTAL = [
   },
 ] as const;
 
+export const FACILITIES = [
+  {
+    id: "zl2",
+    name: "ZL2",
+    features: [
+      {
+        stat: "3",
+        title: "Full-Length Pitching Tunnels",
+        description:
+          "Premium mounds and dedicated space for instruction and game-like training.",
+      },
+      {
+        stat: "3",
+        title: "Full-Length Hitting Tunnels",
+        description:
+          "Spacious batting tunnels with pitching machines for individual and group training.",
+      },
+      {
+        stat: "Full-Size",
+        title: "Turf Infield",
+        description:
+          "Built for defensive drills, team practices, and live game situations year-round.",
+      },
+    ],
+    images: [
+      {
+        src: "/images/facility/tunnels-wide.jpg",
+        alt: "Multiple full-length training tunnels at Zero Limits Baseball ZL2",
+      },
+      {
+        src: "/images/facility/zl2-overview.jpg",
+        alt: "Overview of the ZL2 indoor training facility",
+      },
+    ],
+    imageLayout: "wide",
+  },
+  {
+    id: "zl1",
+    name: "ZL1",
+    features: [
+      {
+        stat: "1",
+        title: "Full-Length Pitching & Hitting Tunnel",
+        description: null,
+      },
+      {
+        stat: "1",
+        title: "Full-Length Plyo Wall",
+        description: "For arm care, rotational power, etc.",
+      },
+      {
+        stat: "Open Turf",
+        title: "Training Area",
+        description: "For fielding, throwing, sports performance, etc.",
+      },
+    ],
+    images: [
+      {
+        src: "/images/facility/zl1-group-training.jpg",
+        alt: "Group training session at Zero Limits Baseball ZL1",
+      },
+      {
+        src: "/images/facility/zl1-pitching.jpg",
+        alt: "Pitching instruction at Zero Limits Baseball ZL1",
+      },
+      {
+        src: "/images/facility/zl1-hitting.jpg",
+        alt: "Hitting practice in the ZL1 training tunnel",
+      },
+    ],
+    imageLayout: "portrait",
+  },
+] as const;
+
 export const WHY_CHOOSE = [
   "Year-round indoor training",
   "Private instruction",
@@ -165,7 +239,7 @@ export const TESTIMONIALS = [
 
 export const NAV_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/about#our-coaches", label: "Our Coaches" },
+  { href: "/our-facilities", label: "Our Facilities" },
+  { href: "/our-coaches", label: "Our Coaches" },
   { href: "/contact", label: "Contact Us" },
 ] as const;
