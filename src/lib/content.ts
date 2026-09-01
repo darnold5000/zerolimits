@@ -50,6 +50,7 @@ export const TRAINING_PILLARS = [
       "Our group and private hitting lessons focus on developing a complete, confident hitter. Athletes receive instruction in proper mechanics, balance, timing, bat speed, pitch recognition, approach, and consistent hard contact. Each lesson is designed around the athlete's individual needs, with drills and coaching that help build an efficient, repeatable swing that translates to game performance.",
     image: "/images/training/hitting.jpg",
     imageAlt: "Baseball hitter in follow-through at home plate",
+    imagePosition: "center",
     layout: "standard",
   },
   {
@@ -58,6 +59,7 @@ export const TRAINING_PILLARS = [
       "Our group and private pitching lessons focus on developing confident, efficient, and consistent pitchers. Instruction includes proper mechanics, balance, direction, command, velocity development, pitch execution, and game approach. Each athlete receives age-appropriate training based on individual needs, along with arm-care and strengthening exercises designed to support healthy development and improve performance on the mound.",
     image: "/images/training/pitching.jpg",
     imageAlt: "Pitcher delivering a pitch with catcher behind home plate",
+    imagePosition: "center 32%",
     layout: "standard",
   },
   {
@@ -66,6 +68,7 @@ export const TRAINING_PILLARS = [
       "Our group and private catching lessons focus on developing confident, skilled, and dependable catchers. Instruction includes receiving, blocking, throwing mechanics, footwork, transfers, pitch presentation, game awareness, and leadership. Each lesson uses position-specific and game-like drills to improve quickness, consistency, arm strength, and overall performance behind the plate.",
     image: "/images/training/catching.jpg",
     imageAlt: "Catcher in ready stance behind home plate",
+    imagePosition: "center",
     layout: "standard",
   },
   {
@@ -74,6 +77,7 @@ export const TRAINING_PILLARS = [
       "Our group and private fielding lessons focus on developing confident, fundamentally sound defenders. Instruction includes proper footwork, glove work, fielding position, throwing mechanics, transfers, angles, range, and decision-making. Each lesson uses game-like drills and individual coaching to improve consistency, quickness, and overall defensive performance.",
     image: "/images/training/fielding.jpg",
     imageAlt: "Infielder fielding a ground ball",
+    imagePosition: "center 42%",
     layout: "standard",
   },
   {
@@ -151,11 +155,6 @@ export const TESTIMONIALS = [
     quote:
       "I've had my boys working with Derek and the Zero Limits coaches for a couple years now. Very knowledgeable and reasonably priced — we have the ability to work out on a regular regimen and not break the bank. Highly recommend for both pitching and hitting.",
     author: "Dylan Jahnke",
-  },
-  {
-    quote:
-      "Derek and all the staff at Zero Limits Baseball are the best around. The improvement we have seen in my son in both hitting and pitching are amazing. They really take the time and care about the boys. I would recommend them to anyone!",
-    author: "Kristy Burns Prosser",
   },
   {
     quote:

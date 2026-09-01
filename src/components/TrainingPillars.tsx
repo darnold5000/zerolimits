@@ -9,20 +9,23 @@ function TrainingSkillCard({
   description,
   image,
   imageAlt,
+  imagePosition = "center",
 }: {
   title: string;
   description: string;
   image: string;
   imageAlt: string;
+  imagePosition?: string;
 }) {
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 transition hover:border-red-200 hover:bg-white hover:shadow-lg">
-      <div className="relative aspect-[16/10] w-full overflow-hidden">
+      <div className="relative aspect-[5/6] w-full overflow-hidden sm:aspect-[4/5]">
         <Image
           src={image}
           alt={imageAlt}
           fill
           className="object-cover transition duration-300 group-hover:scale-105"
+          style={{ objectPosition: imagePosition }}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
       </div>
@@ -55,6 +58,7 @@ export default function TrainingPillars() {
               description={pillar.description}
               image={pillar.image}
               imageAlt={pillar.imageAlt}
+              imagePosition={pillar.imagePosition}
             />
           ))}
         </div>
