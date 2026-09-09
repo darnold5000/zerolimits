@@ -30,6 +30,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: SITE.name,
+    url: SITE.url,
     title: `${SITE.name} | Indoor Baseball Training in Mooresville, IN`,
     description:
       "Year-round indoor baseball and softball training with private and group instruction in Mooresville, Indiana.",

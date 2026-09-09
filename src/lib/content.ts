@@ -1,6 +1,6 @@
 export const SITE = {
   name: "Zero Limits Baseball",
-  url: "https://zero-limits-baseball.com",
+  url: "https://www.zero-limits-baseball.com",
   phone: "(765) 341-9070",
   phoneHref: "tel:+17653419070",
   region: "Central Indiana",
