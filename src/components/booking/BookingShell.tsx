@@ -5,7 +5,12 @@ import BookingPlaceholder from "@/components/booking/BookingPlaceholder";
 import { BookingDemoPaymentHints } from "@/components/booking/BookingDemoPaymentHints";
 import PricingCard from "@/components/PricingCard";
 import { isPlaceholderLink } from "@/lib/links";
-import { PRICING, PRICING_NOTE, SITE } from "@/lib/content";
+import {
+  PRICING,
+  PRICING_NOTE,
+  PRICING_NOTE_RESTRICTION,
+  SITE,
+} from "@/lib/content";
 
 type BookingShellProps = {
   portalUrl: string;
@@ -67,10 +72,13 @@ export default function BookingShell({ portalUrl }: BookingShellProps) {
             />
           ))}
         </div>
-        <p className="mt-6 text-center text-sm text-zinc-600">
-          <span className="font-semibold text-zinc-900">Sibling discount:</span>{" "}
-          {PRICING_NOTE}
-        </p>
+        <div className="mt-6 text-center text-sm text-zinc-600">
+          <p>
+            <span className="font-semibold text-zinc-900">Sibling Discount:</span>{" "}
+            {PRICING_NOTE}
+          </p>
+          <p className="mt-1 italic">{PRICING_NOTE_RESTRICTION}</p>
+        </div>
       </section>
     </div>
   );

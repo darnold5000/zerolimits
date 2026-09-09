@@ -4,7 +4,12 @@ import PricingCard from "@/components/PricingCard";
 import TestimonialCard from "@/components/TestimonialCard";
 import TrainingPillars from "@/components/TrainingPillars";
 import WhyChoose from "@/components/WhyChoose";
-import { PRICING, PRICING_NOTE, TESTIMONIALS } from "@/lib/content";
+import {
+  PRICING,
+  PRICING_NOTE,
+  PRICING_NOTE_RESTRICTION,
+  TESTIMONIALS,
+} from "@/lib/content";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -36,10 +41,13 @@ export default function HomePage() {
               />
             ))}
           </div>
-          <p className="mt-6 text-center text-sm text-zinc-600">
-            <span className="font-semibold text-zinc-900">Sibling discount:</span>{" "}
-            {PRICING_NOTE}
-          </p>
+          <div className="mt-6 text-center text-sm text-zinc-600">
+            <p>
+              <span className="font-semibold text-zinc-900">Sibling Discount:</span>{" "}
+              {PRICING_NOTE}
+            </p>
+            <p className="mt-1 italic">{PRICING_NOTE_RESTRICTION}</p>
+          </div>
           <div className="mt-12 text-center">
             <Link
               href="/schedule-training"

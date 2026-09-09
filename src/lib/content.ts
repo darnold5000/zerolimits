@@ -214,7 +214,7 @@ export const PRICING = [
     id: "group",
     category: "Group Training",
     rates: [
-      { duration: "30 Min", price: 25 },
+      { duration: "30 Min", price: 30 },
       { duration: "60 Min", price: 50 },
       { duration: "90 Min", price: 75 },
     ],
@@ -223,7 +223,10 @@ export const PRICING = [
 ] as const;
 
 export const PRICING_NOTE =
-  "20% off when siblings attend during the same week.";
+  "The first child pays full price. Each additional sibling receives 20% off.";
+
+export const PRICING_NOTE_RESTRICTION =
+  "Discount applies to sessions of 60 minutes or longer. Siblings must complete their sessions during the same calendar week.";
 
 export const TESTIMONIALS = [
   {
