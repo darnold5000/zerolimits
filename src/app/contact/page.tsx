@@ -8,6 +8,7 @@ import { SITE } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Contact Us",
   description: `Contact ${SITE.name} — call ${SITE.phone} or book online.`,
+  alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {

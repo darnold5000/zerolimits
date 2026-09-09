@@ -6,6 +6,7 @@ import { SITE } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Gallery",
   description: `Photos from ${SITE.name} indoor training facilities.`,
+  alternates: { canonical: "/gallery" },
 };
 
 export default function GalleryPage() {

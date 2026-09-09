@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Hero from "@/components/Hero";
 import PageCTA from "@/components/PageCTA";
 import PricingCard from "@/components/PricingCard";
@@ -11,6 +12,10 @@ import {
   TESTIMONIALS,
 } from "@/lib/content";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default function HomePage() {
   return (

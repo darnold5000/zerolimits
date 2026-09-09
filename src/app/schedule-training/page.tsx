@@ -7,6 +7,7 @@ import { getUpperHandPortalUrl } from "@/lib/upperhand";
 export const metadata: Metadata = {
   title: "Schedule Training",
   description: `Book private lessons, group training, and camps at ${SITE.name}.`,
+  alternates: { canonical: "/schedule-training" },
 };
 
 export default function ScheduleTrainingPage() {

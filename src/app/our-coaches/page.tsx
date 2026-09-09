@@ -7,6 +7,7 @@ import { SITE } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Our Coaches",
   description: `Meet the coaching staff at ${SITE.name} — experienced instructors for hitting, pitching, catching, and fielding.`,
+  alternates: { canonical: "/our-coaches" },
 };
 
 export default function OurCoachesPage() {

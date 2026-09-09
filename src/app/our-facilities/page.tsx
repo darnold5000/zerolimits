@@ -8,6 +8,7 @@ import { SITE } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Our Facilities",
   description: `Explore ${SITE.name} indoor training facilities — ZL1 and ZL2 in Mooresville, Indiana.`,
+  alternates: { canonical: "/our-facilities" },
 };
 
 export default function OurFacilitiesPage() {
