@@ -27,7 +27,7 @@ export default function HomePage() {
       <section
         id="catalog-promotion"
         aria-labelledby="catalog-heading"
-        className="bg-zinc-950 py-10 text-white sm:py-12"
+        className="bg-zinc-950 py-6 text-white sm:py-8"
       >
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="grid overflow-hidden rounded-2xl border border-white/10 bg-zinc-900 shadow-xl shadow-black/20 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-stretch">
