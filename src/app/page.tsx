@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import Hero from "@/components/Hero";
 import PageCTA from "@/components/PageCTA";
 import PricingCard from "@/components/PricingCard";
@@ -12,7 +14,6 @@ import {
   SITE,
   TESTIMONIALS,
 } from "@/lib/content";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -22,6 +23,64 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+
+      <section
+        id="catalog-promotion"
+        aria-labelledby="catalog-heading"
+        className="bg-zinc-950 py-10 text-white sm:py-12"
+      >
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="grid overflow-hidden rounded-2xl border border-white/10 bg-zinc-900 shadow-xl shadow-black/20 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-stretch">
+            <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-red-500">
+                RAWLINGS + EASTON
+              </p>
+              <h2
+                id="catalog-heading"
+                className="mt-3 font-display text-3xl font-bold sm:text-4xl"
+              >
+                Spring 2027 Collection
+              </h2>
+              <p className="mt-4 max-w-2xl text-base leading-relaxed text-zinc-300 sm:text-lg">
+                Browse the latest Rawlings and Easton baseball gear available through
+                Zero Limits Baseball.
+              </p>
+              <p className="mt-3 text-sm font-medium text-zinc-300 sm:text-base">
+                Call or text{" "}
+                <a
+                  href={SITE.phoneHref}
+                  className="font-semibold text-white underline decoration-red-500 decoration-2 underline-offset-4 transition hover:text-red-400"
+                >
+                  {SITE.phone}
+                </a>{" "}
+                for pricing and orders.
+              </p>
+              <div className="mt-6">
+                <a
+                  href="https://publuu.com/flip-book/873704/2439687/page/76"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex rounded-md bg-red-600 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
+                >
+                  View Catalog
+                </a>
+              </div>
+            </div>
+
+            <div className="relative aspect-[4/3] overflow-hidden border-t border-white/10 lg:aspect-auto lg:min-h-72 lg:border-l lg:border-t-0">
+              <Image
+                src="/images/catalog/easton-chili-peppers.jpg"
+                alt="Easton Chili Peppers baseball bats and player"
+                fill
+                className="object-cover object-center"
+                sizes="(min-width: 1024px) 40vw, 100vw"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-zinc-950/20 to-transparent lg:from-zinc-950/30" />
+            </div>
+          </div>
+        </div>
+      </section>
+
       <TrainingPillars />
       <WhyChoose />
 
@@ -124,48 +183,6 @@ export default function HomePage() {
                 author={testimonial.author}
               />
             ))}
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="catalog-promotion"
-        aria-labelledby="catalog-heading"
-        className="bg-zinc-950 py-14 text-white sm:py-16"
-      >
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-red-500">
-              RAWLINGS + EASTON
-            </p>
-            <h2
-              id="catalog-heading"
-              className="mt-3 font-display text-3xl font-bold sm:text-4xl"
-            >
-              Spring 2027 Collection
-            </h2>
-            <p className="mt-4 text-lg leading-relaxed text-zinc-300">
-              Browse the latest Rawlings and Easton baseball gear available through Zero
-              Limits Baseball.
-            </p>
-            <p className="mt-3 text-sm font-medium text-zinc-300 sm:text-base">
-              Call or text{" "}
-              <a
-                href={SITE.phoneHref}
-                className="font-semibold text-white underline decoration-red-500 decoration-2 underline-offset-4 transition hover:text-red-400"
-              >
-                {SITE.phone}
-              </a>{" "}
-              for pricing and orders.
-            </p>
-            <a
-              href="https://publuu.com/flip-book/873704/2439687/page/76"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-7 inline-flex rounded-md bg-red-600 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
-            >
-              View Catalog
-            </a>
           </div>
         </div>
       </section>
