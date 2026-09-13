@@ -9,6 +9,7 @@ import {
   PRICING,
   PRICING_NOTE,
   PRICING_NOTE_RESTRICTION,
+  SITE,
   TESTIMONIALS,
 } from "@/lib/content";
 import Link from "next/link";
@@ -123,6 +124,48 @@ export default function HomePage() {
                 author={testimonial.author}
               />
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="catalog-promotion"
+        aria-labelledby="catalog-heading"
+        className="bg-zinc-950 py-14 text-white sm:py-16"
+      >
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="max-w-3xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-red-500">
+              RAWLINGS + EASTON
+            </p>
+            <h2
+              id="catalog-heading"
+              className="mt-3 font-display text-3xl font-bold sm:text-4xl"
+            >
+              Spring 2027 Collection
+            </h2>
+            <p className="mt-4 text-lg leading-relaxed text-zinc-300">
+              Browse the latest Rawlings and Easton baseball gear available through Zero
+              Limits Baseball.
+            </p>
+            <p className="mt-3 text-sm font-medium text-zinc-300 sm:text-base">
+              Call or text{" "}
+              <a
+                href={SITE.phoneHref}
+                className="font-semibold text-white underline decoration-red-500 decoration-2 underline-offset-4 transition hover:text-red-400"
+              >
+                {SITE.phone}
+              </a>{" "}
+              for pricing and orders.
+            </p>
+            <a
+              href="https://publuu.com/flip-book/873704/2439687/page/76"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-7 inline-flex rounded-md bg-red-600 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
+            >
+              View Catalog
+            </a>
           </div>
         </div>
       </section>
