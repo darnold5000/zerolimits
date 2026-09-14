@@ -59,6 +59,10 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
+  icons: {
+    icon: [{ url: "/images/zero-limits-favicon.png", type: "image/png", sizes: "192x192" }],
+    apple: [{ url: "/images/zero-limits-favicon.png", type: "image/png", sizes: "192x192" }],
+  },
 };
 
 const localBusinessJsonLd = {
