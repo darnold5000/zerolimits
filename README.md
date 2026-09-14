@@ -5,10 +5,30 @@ A Next.js demo rebuild of [zerolimitsbaseball.com](https://zerolimitsbaseball.co
 ## Pages
 
 - `/` — Home
-- `/about` — About
+- `/pro-shop` — Pro Shop (Coming Soon until `NEXT_PUBLIC_PRO_SHOP_ENABLED=true`)
+- `/our-facilities` — Facilities (ZL1 / ZL2)
+- `/our-coaches` — Coaches
 - `/schedule-training` — Embedded Upper Hand portal (`/book` and `/schedule` redirect here)
 - `/gallery` — Facility photos
-- `/contact` — Contact form (mailto demo)
+- `/contact` — Contact
+- `/admin/pro-shop` — Staff Pro Shop content admin (Supabase)
+
+## Pro Shop
+
+- Public flag: `NEXT_PUBLIC_PRO_SHOP_ENABLED` (`false` = branded Coming Soon at `/pro-shop`)
+- Editable vendors and featured products live in Supabase (`pro_shop_vendors`, `pro_shop_products`)
+- Config/copy helpers: `src/config/pro-shop.ts`
+
+After applying `supabase/migrations/001_zl_admin_pro_shop.sql` and setting Supabase env vars:
+
+```bash
+STAFF_EMAIL=you@example.com npm run db:staff
+# or by auth user id:
+STAFF_USER_ID=<uuid> npm run db:staff
+npm run db:owners   # initial owners (see migration 002)
+```
+
+Then sign in at `/admin/login`.
 
 ## Local Development
 
@@ -47,4 +67,5 @@ Demo URL example: `zero-limits-demo.vercel.app`
 - Next.js (App Router)
 - TypeScript
 - Tailwind CSS
-- No database, login, or payment processing on this site
+- Supabase (Pro Shop admin content only)
+- No checkout or inventory on this site

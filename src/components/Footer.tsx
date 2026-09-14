@@ -58,7 +58,10 @@ export default function Footer() {
         </div>
 
         <p className="mt-4 text-center text-xs text-zinc-600">
-          Website designed &amp; maintained by Signal Works.
+          Website designed &amp; maintained by Signal Works.{" "}
+          <Link href="/admin/login" className="text-zinc-500 underline-offset-2 hover:text-zinc-300 hover:underline">
+            Staff Login
+          </Link>
         </p>
       </div>
     </footer>

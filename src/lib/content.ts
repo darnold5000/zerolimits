@@ -244,6 +244,7 @@ export const TESTIMONIALS = [
 
 export const NAV_LINKS = [
   { href: "/", label: "Home" },
+  { href: "/pro-shop", label: "Pro Shop" },
   { href: "/our-facilities", label: "Our Facilities" },
   { href: "/our-coaches", label: "Our Coaches" },
   { href: "/contact", label: "Contact Us" },
