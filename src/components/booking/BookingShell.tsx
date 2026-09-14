@@ -20,9 +20,9 @@ export default function BookingShell({ portalUrl }: BookingShellProps) {
   const configured = !isPlaceholderLink(portalUrl);
 
   return (
-    <div className="space-y-16">
-      <section className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
-        <div className="border-b border-zinc-200 bg-zinc-950 px-4 py-8 text-white sm:px-8">
+    <div className="space-y-16 px-4 sm:px-6">
+      <section className="mx-auto w-[min(95vw,1600px)] max-w-[1600px] rounded-2xl border border-zinc-200 bg-white shadow-sm">
+        <div className="rounded-t-2xl border-b border-zinc-200 bg-zinc-950 px-4 py-8 text-white sm:px-8">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-red-500">
             Book Online
           </p>
@@ -41,17 +41,19 @@ export default function BookingShell({ portalUrl }: BookingShellProps) {
 
         <BookingDemoPaymentHints />
 
-        {configured ? (
-          <BookingEmbed src={portalUrl} title={`${SITE.name} — Schedule Training`} />
-        ) : (
-          <BookingPlaceholder
-            title="Schedule Training"
-            description="Private lessons, group lessons, camps, and events."
-          />
-        )}
+        <div className="overflow-x-auto rounded-b-2xl">
+          {configured ? (
+            <BookingEmbed src={portalUrl} title={`${SITE.name} — Schedule Training`} />
+          ) : (
+            <BookingPlaceholder
+              title="Schedule Training"
+              description="Private lessons, group lessons, camps, and events."
+            />
+          )}
+        </div>
       </section>
 
-      <section id="pricing" className="scroll-mt-24">
+      <section id="pricing" className="mx-auto max-w-6xl scroll-mt-24">
         <div className="text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-red-600">
             Pricing

@@ -174,6 +174,7 @@ on conflict (slug) do nothing;
 
 grant usage on schema public to anon, authenticated, service_role;
 grant select on public.pro_shop_vendors, public.pro_shop_products to anon, authenticated;
+grant select on public.zl_admin_users to authenticated;
 grant all on public.pro_shop_vendors, public.pro_shop_products, public.zl_admin_users to service_role;
 
 commit;

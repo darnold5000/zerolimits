@@ -16,9 +16,7 @@ export default function ScheduleTrainingPage() {
   return (
     <>
       <section className="py-10 sm:py-14">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <BookingShell portalUrl={portalUrl} />
-        </div>
+        <BookingShell portalUrl={portalUrl} />
       </section>
       <PageCTA />
     </>
