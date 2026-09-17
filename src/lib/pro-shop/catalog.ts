@@ -10,8 +10,7 @@ export type VendorCatalogConfiguration = {
 };
 
 export type VendorCatalogAction =
-  | { kind: "internal"; href: string; embedUrl: string }
-  | { kind: "external"; href: string }
+  | { kind: "internal"; href: string; embedUrl: string | null }
   | null;
 
 function validHttpUrl(value: string | null): string | null {
@@ -27,11 +26,17 @@ function validHttpUrl(value: string | null): string | null {
   }
 }
 
+function isPubluuUrl(value: string): boolean {
+  try {
+    const parsed = new URL(value);
+    return parsed.hostname === "publuu.com" || parsed.hostname.endsWith(".publuu.com");
+  } catch {
+    return false;
+  }
+}
+
 function publuuEmbedUrl(value: string): string {
-  const parsed = new URL(value);
-  const isPubluu =
-    parsed.hostname === "publuu.com" || parsed.hostname.endsWith(".publuu.com");
-  if (!isPubluu || /(?:[?&])embed(?:[=&]|$)/.test(value)) return value;
+  if (!isPubluuUrl(value) || /(?:[?&])embed(?:[=&]|$)/.test(value)) return value;
 
   const hashIndex = value.indexOf("#");
   const baseUrl = hashIndex >= 0 ? value.slice(0, hashIndex) : value;
@@ -41,13 +46,16 @@ function publuuEmbedUrl(value: string): string {
 }
 
 export function getVendorEmbedUrl(vendor: VendorCatalogConfiguration): string | null {
-  if (!vendor.embedInternally) return null;
-
   const configuredEmbed = validHttpUrl(vendor.embedUrl);
-  if (configuredEmbed) return publuuEmbedUrl(configuredEmbed);
-
   const legacyCatalog = validHttpUrl(vendor.catalogUrl);
-  return legacyCatalog ? publuuEmbedUrl(legacyCatalog) : null;
+  const candidate = configuredEmbed ?? legacyCatalog;
+  if (!candidate) return null;
+
+  // Publuu catalogs are always embeddable (legacy Rawlings behavior).
+  // Other URLs require the admin "Embed catalog inside Zero Limits" flag.
+  if (!vendor.embedInternally && !isPubluuUrl(candidate)) return null;
+
+  return publuuEmbedUrl(candidate);
 }
 
 export function getVendorExternalUrl(
@@ -61,18 +69,21 @@ export function getVendorExternalUrl(
   );
 }
 
+/**
+ * Prefer an on-site Zero Limits catalog page whenever the vendor has any
+ * shop/catalog destination. External checkout happens from that page when
+ * the partner site cannot be iframes (e.g. Shopify).
+ */
 export function getVendorCatalogAction(
   vendor: VendorCatalogConfiguration,
 ): VendorCatalogAction {
   const embedUrl = getVendorEmbedUrl(vendor);
-  if (embedUrl) {
-    return {
-      kind: "internal",
-      href: getProShopCatalogRoute(vendor.slug),
-      embedUrl,
-    };
-  }
-
   const externalUrl = getVendorExternalUrl(vendor);
-  return externalUrl ? { kind: "external", href: externalUrl } : null;
+  if (!embedUrl && !externalUrl) return null;
+
+  return {
+    kind: "internal",
+    href: getProShopCatalogRoute(vendor.slug),
+    embedUrl,
+  };
 }

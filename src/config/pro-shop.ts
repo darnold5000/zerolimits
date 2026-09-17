@@ -24,7 +24,7 @@ export const PRO_SHOP_COPY = {
   comingSoonCtaPrompt: "Questions about gear?",
   homepageBody:
     "Shop bats, gloves, gear, and equipment available through Zero Limits Baseball.",
-  brandsLine: "Rawlings • Easton • More Coming Soon",
+  brandsLine: "Rawlings • Easton • Baseline Sports",
   homepageCta: "Visit Pro Shop",
   benefits: ["Trusted Brands", "Zero Limits Pricing", "Local Support"] as const,
   helpHeading: "Not Sure What You Need?",

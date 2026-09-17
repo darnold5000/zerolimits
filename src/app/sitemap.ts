@@ -9,6 +9,11 @@ const routes = [
     changeFrequency: "weekly",
     priority: 0.75,
   },
+  {
+    path: "/pro-shop/catalog/baseline-sports",
+    changeFrequency: "weekly",
+    priority: 0.75,
+  },
   { path: "/our-facilities", changeFrequency: "monthly", priority: 0.9 },
   { path: "/our-coaches", changeFrequency: "monthly", priority: 0.8 },
   { path: "/schedule-training", changeFrequency: "weekly", priority: 0.9 },

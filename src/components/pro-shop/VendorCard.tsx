@@ -57,24 +57,12 @@ export default function VendorCard({ vendor, reverse = false }: VendorCardProps)
         ) : null}
         {catalogAction ? (
           <div className="mt-6 flex flex-wrap gap-3">
-            {catalogAction.kind === "internal" ? (
-              <Link
-                href={catalogAction.href}
-                className="inline-flex rounded-md bg-red-600 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
-              >
-                {PRO_SHOP_COPY.vendorCatalogCta}
-              </Link>
-            ) : (
-              <a
-                href={catalogAction.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex rounded-md bg-red-600 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
-              >
-                {PRO_SHOP_COPY.vendorExternalCta}
-                <span className="sr-only"> (opens the vendor website in a new tab)</span>
-              </a>
-            )}
+            <Link
+              href={catalogAction.href}
+              className="inline-flex rounded-md bg-red-600 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
+            >
+              {PRO_SHOP_COPY.vendorCatalogCta}
+            </Link>
           </div>
         ) : null}
       </div>
@@ -87,7 +75,11 @@ export default function VendorCard({ vendor, reverse = false }: VendorCardProps)
             src={vendor.imageUrl}
             alt={vendor.name}
             fill
-            className="object-cover object-center"
+            className={
+              vendor.slug === "baseline-sports"
+                ? "object-contain bg-white p-8 sm:p-12"
+                : "object-cover object-center"
+            }
             sizes="(min-width: 1024px) 50vw, 100vw"
             unoptimized={vendor.imageUrl.startsWith("http")}
           />

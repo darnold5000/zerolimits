@@ -304,7 +304,9 @@ export default function ProShopAdminPanel({ vendors, products, vendorOptions }: 
               </label>
               <p className="-mt-2 text-xs text-zinc-500">
                 Enable only after confirming the configured embed or catalog URL permits
-                iframe embedding. Otherwise customers will use the referral or shop URL.
+                iframe embedding (Publuu catalogs do). Shopify storefronts usually block
+                iframes — leave this off and customers will still stay on the Zero Limits
+                catalog page before continuing to the partner shop.
               </p>
               <label className="flex items-center gap-2 text-sm">
                 <input

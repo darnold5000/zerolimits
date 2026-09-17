@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
-import { PRO_SHOP_ROUTE } from "@/config/pro-shop";
+import { notFound } from "next/navigation";
+import { PRO_SHOP_COPY, PRO_SHOP_ROUTE } from "@/config/pro-shop";
 import { SITE } from "@/lib/content";
 import { getVendorEmbedUrl, getVendorExternalUrl } from "@/lib/pro-shop/catalog";
 import { fetchPublicProShopVendorBySlug } from "@/lib/pro-shop/queries";
@@ -47,11 +48,8 @@ export default async function VendorCatalogPage({ params }: CatalogPageProps) {
   if (!vendor) notFound();
 
   const embedUrl = getVendorEmbedUrl(vendor);
-  if (!embedUrl) {
-    const externalUrl = getVendorExternalUrl(vendor);
-    if (externalUrl) redirect(externalUrl);
-    notFound();
-  }
+  const externalUrl = getVendorExternalUrl(vendor);
+  if (!embedUrl && !externalUrl) notFound();
 
   const catalogTitle = vendor.catalogTitle ?? vendor.title ?? "Catalog";
 
@@ -93,17 +91,64 @@ export default async function VendorCatalogPage({ params }: CatalogPageProps) {
           ) : null}
         </div>
 
-        <div className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-zinc-900 shadow-2xl shadow-black/30">
-          <iframe
-            src={embedUrl}
-            title={`${vendor.name} ${catalogTitle}`}
-            className="h-[72svh] min-h-[30rem] w-full bg-zinc-900 sm:h-[76vh] sm:min-h-[38rem] lg:h-[calc(100vh-10rem)] lg:min-h-[44rem]"
-            allow="fullscreen"
-            allowFullScreen
-            loading="eager"
-            referrerPolicy="strict-origin-when-cross-origin"
-          />
-        </div>
+        {embedUrl ? (
+          <div className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-zinc-900 shadow-2xl shadow-black/30">
+            <iframe
+              src={embedUrl}
+              title={`${vendor.name} ${catalogTitle}`}
+              className="h-[72svh] min-h-[30rem] w-full bg-zinc-900 sm:h-[76vh] sm:min-h-[38rem] lg:h-[calc(100vh-10rem)] lg:min-h-[44rem]"
+              allow="fullscreen"
+              allowFullScreen
+              loading="eager"
+              referrerPolicy="strict-origin-when-cross-origin"
+            />
+          </div>
+        ) : (
+          <div className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-zinc-900 shadow-2xl shadow-black/30">
+            <div className="grid gap-8 p-6 sm:p-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-red-500">
+                  Partner Shop
+                </p>
+                <h2 className="mt-3 font-display text-2xl font-bold sm:text-3xl">
+                  Browse {vendor.name} without leaving Zero Limits
+                </h2>
+                <p className="mt-4 max-w-xl text-base leading-relaxed text-zinc-300 sm:text-lg">
+                  This partner store is hosted on their own site, so checkout happens there.
+                  Start from Zero Limits, then continue into the {vendor.name} shop when you are
+                  ready.
+                </p>
+                {externalUrl ? (
+                  <a
+                    href={externalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 inline-flex rounded-md bg-red-600 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
+                  >
+                    {PRO_SHOP_COPY.vendorExternalCta}
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                ) : null}
+              </div>
+              <div className="relative mx-auto flex min-h-[14rem] w-full max-w-md items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white p-8 sm:min-h-[18rem]">
+                {vendor.imageUrl ? (
+                  <Image
+                    src={vendor.imageUrl}
+                    alt={vendor.name}
+                    width={480}
+                    height={240}
+                    className="h-auto w-full object-contain"
+                    unoptimized={vendor.imageUrl.startsWith("http")}
+                  />
+                ) : (
+                  <p className="font-display text-2xl font-bold uppercase tracking-wide text-zinc-400">
+                    {vendor.name}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
