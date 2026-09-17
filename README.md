@@ -6,7 +6,7 @@ A Next.js demo rebuild of [zerolimitsbaseball.com](https://zerolimitsbaseball.co
 
 - `/` — Home
 - `/pro-shop` — Pro Shop (Coming Soon until `NEXT_PUBLIC_PRO_SHOP_ENABLED=true`)
-- `/pro-shop/catalog` — Embedded Rawlings + Easton catalog
+- `/pro-shop/catalog/[slug]` — Embedded vendor catalog (when enabled per vendor)
 - `/our-facilities` — Facilities (ZL1 / ZL2)
 - `/our-coaches` — Coaches
 - `/schedule-training` — Embedded Upper Hand portal (`/book` and `/schedule` redirect here)
@@ -18,7 +18,7 @@ A Next.js demo rebuild of [zerolimitsbaseball.com](https://zerolimitsbaseball.co
 
 - Public flag: `NEXT_PUBLIC_PRO_SHOP_ENABLED` (`false` = branded Coming Soon at `/pro-shop`)
 - Editable vendors and featured products live in Supabase (`pro_shop_vendors`, `pro_shop_products`)
-- Catalog and embed URLs are managed through each vendor's `catalog_url` field
+- Vendor catalog, embed, referral, and fulfillment settings are managed per vendor
 - Config/copy helpers: `src/config/pro-shop.ts`
 
 After applying `supabase/migrations/001_zl_admin_pro_shop.sql` and setting Supabase env vars:

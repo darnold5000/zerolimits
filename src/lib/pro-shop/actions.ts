@@ -9,7 +9,7 @@ import {
 } from "@/lib/supabase/client";
 
 const PRO_SHOP_PATH = "/pro-shop";
-const PRO_SHOP_CATALOG_PATH = "/pro-shop/catalog";
+const PRO_SHOP_CATALOG_PATH = "/pro-shop/catalog/[slug]";
 const ADMIN_PATH = "/admin/pro-shop";
 
 function slugify(value: string): string {
@@ -28,18 +28,24 @@ async function assertAdmin() {
 
 async function revalidateProShop() {
   revalidatePath(PRO_SHOP_PATH);
-  revalidatePath(PRO_SHOP_CATALOG_PATH);
+  revalidatePath(PRO_SHOP_CATALOG_PATH, "page");
   revalidatePath(ADMIN_PATH);
 }
 
 export type VendorFormInput = {
   id?: string;
+  slug: string;
   name: string;
+  subtitle: string;
   title: string;
+  catalogTitle: string;
   description: string;
   imageUrl: string;
   shopUrl: string;
   catalogUrl: string;
+  embedUrl: string;
+  referralUrl: string;
+  embedInternally: boolean;
   discountCode: string;
   fulfillmentNote: string;
   enabled: boolean;
@@ -59,13 +65,20 @@ export type ProductFormInput = {
 
 export async function saveVendor(input: VendorFormInput) {
   const supabase = await assertAdmin();
+  const normalizedSlug = slugify(input.slug || input.name) || "vendor";
   const payload = {
+    slug: normalizedSlug,
     name: input.name.trim(),
+    subtitle: input.subtitle.trim() || null,
     title: input.title.trim(),
+    catalog_title: input.catalogTitle.trim() || null,
     description: input.description.trim(),
     image_url: input.imageUrl.trim() || null,
     shop_url: input.shopUrl.trim() || null,
     catalog_url: input.catalogUrl.trim() || null,
+    embed_url: input.embedUrl.trim() || null,
+    referral_url: input.referralUrl.trim() || null,
+    embed_internally: input.embedInternally,
     discount_code: input.discountCode.trim() || null,
     fulfillment_note: input.fulfillmentNote.trim() || null,
     enabled: input.enabled,
@@ -78,7 +91,7 @@ export async function saveVendor(input: VendorFormInput) {
       .eq("id", input.id);
     if (error) throw new Error(error.message);
   } else {
-    const baseSlug = slugify(input.name) || "vendor";
+    const baseSlug = normalizedSlug;
     let slug = baseSlug;
     let attempt = 0;
     while (attempt < 5) {

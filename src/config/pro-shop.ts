@@ -7,7 +7,10 @@ export function isProShopEnabled(): boolean {
 
 export const PRO_SHOP_ROUTE = "/pro-shop" as const;
 export const PRO_SHOP_CATALOG_ROUTE = "/pro-shop/catalog" as const;
-export const PRO_SHOP_CATALOG_VENDOR_SLUG = "rawlings-easton" as const;
+
+export function getProShopCatalogRoute(slug: string): string {
+  return `${PRO_SHOP_CATALOG_ROUTE}/${encodeURIComponent(slug)}`;
+}
 
 export const PRO_SHOP_COPY = {
   eyebrow: "Zero Limits Pro Shop",
@@ -34,4 +37,5 @@ export const PRO_SHOP_COPY = {
   heroImageAlt: "Easton baseball bats and player",
   vendorShopCta: "Shop",
   vendorCatalogCta: "Browse Catalog",
+  vendorExternalCta: "Continue to Vendor",
 } as const;

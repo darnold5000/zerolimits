@@ -39,10 +39,15 @@ export type DbProShopVendor = {
   id: string;
   slug: string;
   name: string;
+  subtitle: string | null;
   title: string;
+  catalog_title: string | null;
   description: string;
   image_url: string | null;
   shop_url: string | null;
+  embed_url: string | null;
+  referral_url: string | null;
+  embed_internally: boolean;
   discount_code: string | null;
   fulfillment_note: string | null;
   catalog_url: string | null;

@@ -23,12 +23,18 @@ type Props = {
 };
 
 const emptyVendor: VendorFormInput = {
+  slug: "",
   name: "",
+  subtitle: "",
   title: "",
+  catalogTitle: "",
   description: "",
   imageUrl: "",
   shopUrl: "",
   catalogUrl: "",
+  embedUrl: "",
+  referralUrl: "",
+  embedInternally: false,
   discountCode: "",
   fulfillmentNote: "",
   enabled: false,
@@ -216,9 +222,14 @@ export default function ProShopAdminPanel({ vendors, products, vendorOptions }: 
                 {(
                   [
                     ["Vendor Name", "name"],
-                    ["Title", "title"],
-                    ["Shop / Referral URL", "shopUrl"],
-                    ["Catalog / Embed URL", "catalogUrl"],
+                    ["Slug", "slug"],
+                    ["Vendor Card Title", "title"],
+                    ["Vendor Subtitle", "subtitle"],
+                    ["Catalog Page Heading", "catalogTitle"],
+                    ["Vendor / Shop URL", "shopUrl"],
+                    ["Catalog URL", "catalogUrl"],
+                    ["Embed URL", "embedUrl"],
+                    ["Referral / External Checkout URL", "referralUrl"],
                     ["Discount Code", "discountCode"],
                   ] as const
                 ).map(([label, key]) => (
@@ -226,6 +237,7 @@ export default function ProShopAdminPanel({ vendors, products, vendorOptions }: 
                     <span className="font-medium text-zinc-800">{label}</span>
                     <input
                       required={key === "name"}
+                      type={key.endsWith("Url") ? "url" : "text"}
                       value={editingVendor[key]}
                       onChange={(e) =>
                         setEditingVendor({ ...editingVendor, [key]: e.target.value })
@@ -234,6 +246,20 @@ export default function ProShopAdminPanel({ vendors, products, vendorOptions }: 
                     />
                   </label>
                 ))}
+              </div>
+              <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 text-sm leading-relaxed text-zinc-600">
+                <p>
+                  <strong className="text-zinc-900">Embed URL:</strong> loaded inside the
+                  Zero Limits catalog page when internal embedding is enabled. If blank,
+                  the Catalog URL is used; Publuu catalog links automatically receive
+                  embed mode.
+                </p>
+                <p className="mt-2">
+                  <strong className="text-zinc-900">Referral URL:</strong> used first when
+                  internal embedding is disabled or unavailable and customers are sent to
+                  the vendor. Its full query string is preserved for attribution and
+                  checkout tracking.
+                </p>
               </div>
               <label className="block text-sm">
                 <span className="font-medium text-zinc-800">Description</span>
@@ -263,6 +289,23 @@ export default function ProShopAdminPanel({ vendors, products, vendorOptions }: 
                 value={editingVendor.imageUrl}
                 onChange={(url) => setEditingVendor({ ...editingVendor, imageUrl: url })}
               />
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={editingVendor.embedInternally}
+                  onChange={(e) =>
+                    setEditingVendor({
+                      ...editingVendor,
+                      embedInternally: e.target.checked,
+                    })
+                  }
+                />
+                Embed catalog inside Zero Limits
+              </label>
+              <p className="-mt-2 text-xs text-zinc-500">
+                Enable only after confirming the configured embed or catalog URL permits
+                iframe embedding. Otherwise customers will use the referral or shop URL.
+              </p>
               <label className="flex items-center gap-2 text-sm">
                 <input
                   type="checkbox"
@@ -317,8 +360,11 @@ export default function ProShopAdminPanel({ vendors, products, vendorOptions }: 
                   </div>
                   <p className="text-sm text-zinc-600">{vendor.title}</p>
                   <p className="mt-1 text-xs text-zinc-500">
-                    Shop link: {vendor.shop_url ? "Yes" : "None"} · Catalog:{" "}
-                    {vendor.catalog_url ? "Yes" : "None"}
+                    Slug: {vendor.slug} · Shop: {vendor.shop_url ? "Yes" : "None"} ·
+                    Catalog: {vendor.catalog_url ? "Yes" : "None"} · Embed:{" "}
+                    {vendor.embed_url ? "Yes" : "None"} · Referral:{" "}
+                    {vendor.referral_url ? "Yes" : "None"} · Mode:{" "}
+                    {vendor.embed_internally ? "Internal" : "External"}
                     {vendor.discount_code ? ` · Code: ${vendor.discount_code}` : ""}
                   </p>
                 </div>
@@ -345,12 +391,18 @@ export default function ProShopAdminPanel({ vendors, products, vendorOptions }: 
                     onClick={() =>
                       setEditingVendor({
                         id: vendor.id,
+                        slug: vendor.slug,
                         name: vendor.name,
+                        subtitle: vendor.subtitle ?? "",
                         title: vendor.title,
+                        catalogTitle: vendor.catalog_title ?? "",
                         description: vendor.description,
                         imageUrl: vendor.image_url ?? "",
                         shopUrl: vendor.shop_url ?? "",
                         catalogUrl: vendor.catalog_url ?? "",
+                        embedUrl: vendor.embed_url ?? "",
+                        referralUrl: vendor.referral_url ?? "",
+                        embedInternally: vendor.embed_internally,
                         discountCode: vendor.discount_code ?? "",
                         fulfillmentNote: vendor.fulfillment_note ?? "",
                         enabled: vendor.enabled,

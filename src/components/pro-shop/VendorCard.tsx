@@ -1,12 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { PublicProShopVendor } from "@/lib/pro-shop/queries";
-import {
-  PRO_SHOP_CATALOG_ROUTE,
-  PRO_SHOP_CATALOG_VENDOR_SLUG,
-  PRO_SHOP_COPY,
-} from "@/config/pro-shop";
+import { PRO_SHOP_COPY } from "@/config/pro-shop";
 import { SITE } from "@/lib/content";
+import { getVendorCatalogAction } from "@/lib/pro-shop/catalog";
 
 type VendorCardProps = {
   vendor: PublicProShopVendor;
@@ -28,9 +25,7 @@ function noteWithPhone(note: string) {
 }
 
 export default function VendorCard({ vendor, reverse = false }: VendorCardProps) {
-  const hasShop = Boolean(vendor.shopUrl);
-  const hasCatalog = Boolean(vendor.catalogUrl);
-  const usesInternalCatalog = vendor.slug === PRO_SHOP_CATALOG_VENDOR_SLUG;
+  const catalogAction = getVendorCatalogAction(vendor);
 
   return (
     <article className="grid overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-lg shadow-zinc-200/50 lg:grid-cols-2 lg:items-stretch">
@@ -40,6 +35,9 @@ export default function VendorCard({ vendor, reverse = false }: VendorCardProps)
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-red-600">
           {vendor.name}
         </p>
+        {vendor.subtitle ? (
+          <p className="mt-2 text-sm italic text-zinc-500">{vendor.subtitle}</p>
+        ) : null}
         <h2 className="mt-3 font-display text-3xl font-bold text-zinc-900 sm:text-4xl">
           {vendor.title}
         </h2>
@@ -57,45 +55,26 @@ export default function VendorCard({ vendor, reverse = false }: VendorCardProps)
         {vendor.fulfillmentNote ? (
           <p className="mt-3 text-sm text-zinc-600">{noteWithPhone(vendor.fulfillmentNote)}</p>
         ) : null}
-        {hasShop || hasCatalog ? (
+        {catalogAction ? (
           <div className="mt-6 flex flex-wrap gap-3">
-            {hasShop ? (
+            {catalogAction.kind === "internal" ? (
+              <Link
+                href={catalogAction.href}
+                className="inline-flex rounded-md bg-red-600 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
+              >
+                {PRO_SHOP_COPY.vendorCatalogCta}
+              </Link>
+            ) : (
               <a
-                href={vendor.shopUrl!}
+                href={catalogAction.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex rounded-md bg-red-600 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
               >
-                {PRO_SHOP_COPY.vendorShopCta}
+                {PRO_SHOP_COPY.vendorExternalCta}
+                <span className="sr-only"> (opens the vendor website in a new tab)</span>
               </a>
-            ) : null}
-            {hasCatalog ? (
-              usesInternalCatalog ? (
-                <Link
-                  href={PRO_SHOP_CATALOG_ROUTE}
-                  className={`inline-flex rounded-md px-8 py-3.5 text-sm font-bold uppercase tracking-wide transition ${
-                    hasShop
-                      ? "border-2 border-zinc-900 text-zinc-900 hover:bg-zinc-900 hover:text-white"
-                      : "bg-red-600 text-white hover:bg-red-500"
-                  }`}
-                >
-                  {PRO_SHOP_COPY.vendorCatalogCta}
-                </Link>
-              ) : (
-                <a
-                  href={vendor.catalogUrl!}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`inline-flex rounded-md px-8 py-3.5 text-sm font-bold uppercase tracking-wide transition ${
-                    hasShop
-                      ? "border-2 border-zinc-900 text-zinc-900 hover:bg-zinc-900 hover:text-white"
-                      : "bg-red-600 text-white hover:bg-red-500"
-                  }`}
-                >
-                  {PRO_SHOP_COPY.vendorCatalogCta}
-                </a>
-              )
-            ) : null}
+            )}
           </div>
         ) : null}
       </div>
