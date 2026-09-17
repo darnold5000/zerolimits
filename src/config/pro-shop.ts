@@ -6,6 +6,8 @@ export function isProShopEnabled(): boolean {
 }
 
 export const PRO_SHOP_ROUTE = "/pro-shop" as const;
+export const PRO_SHOP_CATALOG_ROUTE = "/pro-shop/catalog" as const;
+export const PRO_SHOP_CATALOG_VENDOR_SLUG = "rawlings-easton" as const;
 
 export const PRO_SHOP_COPY = {
   eyebrow: "Zero Limits Pro Shop",

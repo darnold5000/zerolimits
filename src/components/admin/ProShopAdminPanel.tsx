@@ -218,7 +218,7 @@ export default function ProShopAdminPanel({ vendors, products, vendorOptions }: 
                     ["Vendor Name", "name"],
                     ["Title", "title"],
                     ["Shop / Referral URL", "shopUrl"],
-                    ["Catalog URL", "catalogUrl"],
+                    ["Catalog / Embed URL", "catalogUrl"],
                     ["Discount Code", "discountCode"],
                   ] as const
                 ).map(([label, key]) => (

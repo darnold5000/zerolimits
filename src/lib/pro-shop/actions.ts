@@ -9,6 +9,7 @@ import {
 } from "@/lib/supabase/client";
 
 const PRO_SHOP_PATH = "/pro-shop";
+const PRO_SHOP_CATALOG_PATH = "/pro-shop/catalog";
 const ADMIN_PATH = "/admin/pro-shop";
 
 function slugify(value: string): string {
@@ -27,6 +28,7 @@ async function assertAdmin() {
 
 async function revalidateProShop() {
   revalidatePath(PRO_SHOP_PATH);
+  revalidatePath(PRO_SHOP_CATALOG_PATH);
   revalidatePath(ADMIN_PATH);
 }
 

@@ -5,6 +5,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export type PublicProShopVendor = {
   id: string;
+  slug: string;
   name: string;
   title: string;
   description: string;
@@ -29,6 +30,7 @@ export type PublicProShopProduct = {
 function mapVendor(row: DbProShopVendor): PublicProShopVendor {
   return {
     id: row.id,
+    slug: row.slug,
     name: row.name,
     title: row.title,
     description: row.description,
@@ -68,6 +70,25 @@ export async function fetchPublicProShopVendors(): Promise<PublicProShopVendor[]
 
   if (error || !data) return [];
   return (data as DbProShopVendor[]).map(mapVendor);
+}
+
+export async function fetchPublicProShopVendorBySlug(
+  slug: string,
+): Promise<PublicProShopVendor | null> {
+  if (!isSupabaseConfigured()) return null;
+
+  const supabase = await createSupabaseServerClient();
+  if (!supabase) return null;
+
+  const { data, error } = await supabase
+    .from(TABLES.vendors)
+    .select("*")
+    .eq("slug", slug)
+    .eq("enabled", true)
+    .maybeSingle();
+
+  if (error || !data) return null;
+  return mapVendor(data as DbProShopVendor);
 }
 
 export async function fetchPublicProShopProducts(): Promise<PublicProShopProduct[]> {

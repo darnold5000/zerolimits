@@ -1,6 +1,11 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { PublicProShopVendor } from "@/lib/pro-shop/queries";
-import { PRO_SHOP_COPY } from "@/config/pro-shop";
+import {
+  PRO_SHOP_CATALOG_ROUTE,
+  PRO_SHOP_CATALOG_VENDOR_SLUG,
+  PRO_SHOP_COPY,
+} from "@/config/pro-shop";
 import { SITE } from "@/lib/content";
 
 type VendorCardProps = {
@@ -25,6 +30,7 @@ function noteWithPhone(note: string) {
 export default function VendorCard({ vendor, reverse = false }: VendorCardProps) {
   const hasShop = Boolean(vendor.shopUrl);
   const hasCatalog = Boolean(vendor.catalogUrl);
+  const usesInternalCatalog = vendor.slug === PRO_SHOP_CATALOG_VENDOR_SLUG;
 
   return (
     <article className="grid overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-lg shadow-zinc-200/50 lg:grid-cols-2 lg:items-stretch">
@@ -64,18 +70,31 @@ export default function VendorCard({ vendor, reverse = false }: VendorCardProps)
               </a>
             ) : null}
             {hasCatalog ? (
-              <a
-                href={vendor.catalogUrl!}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`inline-flex rounded-md px-8 py-3.5 text-sm font-bold uppercase tracking-wide transition ${
-                  hasShop
-                    ? "border-2 border-zinc-900 text-zinc-900 hover:bg-zinc-900 hover:text-white"
-                    : "bg-red-600 text-white hover:bg-red-500"
-                }`}
-              >
-                {PRO_SHOP_COPY.vendorCatalogCta}
-              </a>
+              usesInternalCatalog ? (
+                <Link
+                  href={PRO_SHOP_CATALOG_ROUTE}
+                  className={`inline-flex rounded-md px-8 py-3.5 text-sm font-bold uppercase tracking-wide transition ${
+                    hasShop
+                      ? "border-2 border-zinc-900 text-zinc-900 hover:bg-zinc-900 hover:text-white"
+                      : "bg-red-600 text-white hover:bg-red-500"
+                  }`}
+                >
+                  {PRO_SHOP_COPY.vendorCatalogCta}
+                </Link>
+              ) : (
+                <a
+                  href={vendor.catalogUrl!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`inline-flex rounded-md px-8 py-3.5 text-sm font-bold uppercase tracking-wide transition ${
+                    hasShop
+                      ? "border-2 border-zinc-900 text-zinc-900 hover:bg-zinc-900 hover:text-white"
+                      : "bg-red-600 text-white hover:bg-red-500"
+                  }`}
+                >
+                  {PRO_SHOP_COPY.vendorCatalogCta}
+                </a>
+              )
             ) : null}
           </div>
         ) : null}

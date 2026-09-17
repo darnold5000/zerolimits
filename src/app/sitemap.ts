@@ -4,6 +4,7 @@ import { SITE } from "@/lib/content";
 const routes = [
   { path: "", changeFrequency: "weekly", priority: 1 },
   { path: "/pro-shop", changeFrequency: "weekly", priority: 0.85 },
+  { path: "/pro-shop/catalog", changeFrequency: "weekly", priority: 0.75 },
   { path: "/our-facilities", changeFrequency: "monthly", priority: 0.9 },
   { path: "/our-coaches", changeFrequency: "monthly", priority: 0.8 },
   { path: "/schedule-training", changeFrequency: "weekly", priority: 0.9 },
