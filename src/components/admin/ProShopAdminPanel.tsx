@@ -303,10 +303,9 @@ export default function ProShopAdminPanel({ vendors, products, vendorOptions }: 
                 Embed catalog inside Zero Limits
               </label>
               <p className="-mt-2 text-xs text-zinc-500">
-                Enable only after confirming the configured embed or catalog URL permits
-                iframe embedding (Publuu catalogs do). Shopify storefronts usually block
-                iframes — leave this off and customers will still stay on the Zero Limits
-                catalog page before continuing to the partner shop.
+                Publuu catalogs embed directly. Partner shop URLs (e.g. Shopify) embed
+                through a Zero Limits proxy path so customers stay on your site — set a
+                Vendor / Shop URL or Referral URL and enable this option.
               </p>
               <label className="flex items-center gap-2 text-sm">
                 <input

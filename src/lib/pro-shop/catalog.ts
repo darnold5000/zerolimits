@@ -1,4 +1,4 @@
-import { getProShopCatalogRoute } from "@/config/pro-shop";
+import { getProShopCatalogRoute, getProShopEmbedRoute } from "@/config/pro-shop";
 
 export type VendorCatalogConfiguration = {
   slug: string;
@@ -45,17 +45,27 @@ function publuuEmbedUrl(value: string): string {
   return `${baseUrl}${separator}embed${hash}`;
 }
 
+function getVendorPartnerShopUrl(vendor: VendorCatalogConfiguration): string | null {
+  return validHttpUrl(vendor.shopUrl) ?? validHttpUrl(vendor.referralUrl);
+}
+
 export function getVendorEmbedUrl(vendor: VendorCatalogConfiguration): string | null {
   const configuredEmbed = validHttpUrl(vendor.embedUrl);
   const legacyCatalog = validHttpUrl(vendor.catalogUrl);
-  const candidate = configuredEmbed ?? legacyCatalog;
-  if (!candidate) return null;
+  const catalogCandidate = configuredEmbed ?? legacyCatalog;
 
-  // Publuu catalogs are always embeddable (legacy Rawlings behavior).
-  // Other URLs require the admin "Embed catalog inside Zero Limits" flag.
-  if (!vendor.embedInternally && !isPubluuUrl(candidate)) return null;
+  if (catalogCandidate) {
+    // Publuu catalogs are always embeddable (legacy Rawlings behavior).
+    if (!vendor.embedInternally && !isPubluuUrl(catalogCandidate)) return null;
+    return publuuEmbedUrl(catalogCandidate);
+  }
 
-  return publuuEmbedUrl(candidate);
+  const partnerShop = getVendorPartnerShopUrl(vendor);
+  if (partnerShop && vendor.embedInternally) {
+    return getProShopEmbedRoute(vendor.slug);
+  }
+
+  return null;
 }
 
 export function getVendorExternalUrl(
@@ -69,17 +79,11 @@ export function getVendorExternalUrl(
   );
 }
 
-/**
- * Prefer an on-site Zero Limits catalog page whenever the vendor has any
- * shop/catalog destination. External checkout happens from that page when
- * the partner site cannot be iframes (e.g. Shopify).
- */
 export function getVendorCatalogAction(
   vendor: VendorCatalogConfiguration,
 ): VendorCatalogAction {
   const embedUrl = getVendorEmbedUrl(vendor);
-  const externalUrl = getVendorExternalUrl(vendor);
-  if (!embedUrl && !externalUrl) return null;
+  if (!embedUrl) return null;
 
   return {
     kind: "internal",

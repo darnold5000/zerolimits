@@ -12,6 +12,11 @@ export function getProShopCatalogRoute(slug: string): string {
   return `${PRO_SHOP_CATALOG_ROUTE}/${encodeURIComponent(slug)}`;
 }
 
+/** Same-origin proxy path for partner shops that block third-party iframes. */
+export function getProShopEmbedRoute(slug: string): string {
+  return `/pro-shop/embed/${encodeURIComponent(slug)}`;
+}
+
 export const PRO_SHOP_COPY = {
   eyebrow: "Zero Limits Pro Shop",
   heading: "Gear Up. Play Without Limits.",
