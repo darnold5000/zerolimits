@@ -19,7 +19,7 @@ A Next.js demo rebuild of [zerolimitsbaseball.com](https://zerolimitsbaseball.co
 - Public flag: `NEXT_PUBLIC_PRO_SHOP_ENABLED` (`false` = branded Coming Soon at `/pro-shop`)
 - Editable vendors and featured products live in Supabase (`pro_shop_vendors`, `pro_shop_products`)
 - Vendor catalog CTAs stay on `/pro-shop/catalog/[slug]`; Publuu catalogs embed in-page
-- Partner shops that block iframes (e.g. Shopify) keep a Zero Limits catalog page with a continue link
+- Partner shops that block iframes (e.g. Shopify) are proxied same-origin; off-origin redirects are not followed
 - Config/copy helpers: `src/config/pro-shop.ts`
 
 After applying `supabase/migrations/001_zl_admin_pro_shop.sql` and setting Supabase env vars:

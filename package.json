@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test:vendor-proxy": "npx tsx --test src/lib/pro-shop/vendor-proxy.test.ts",
     "db:staff": "node scripts/db-staff.mjs",
     "db:owners": "STAFF_USER_ID=9e8b0da7-5f59-48c9-b3cf-f2506e2bb89c,fd8e30f5-173f-4c95-983d-950ce1b2af6a node scripts/db-staff.mjs"
   },
