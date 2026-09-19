@@ -77,7 +77,51 @@ function embedBasePath(slug: string): string {
   return `/pro-shop/embed/${encodeURIComponent(slug)}`;
 }
 
-function rewriteShopHtml(html: string, upstream: URL, embedPath: string): string {
+function normalizedEmbedBase(embedPath: string): string {
+  return embedPath.endsWith("/") ? embedPath.slice(0, -1) : embedPath;
+}
+
+const ROOT_RELATIVE_ATTR_RE =
+  /\b(href|action|src)=(["'])\/(?!\/)([^"']*)\2/gi;
+
+/** Shopify uses root-relative hrefs; <base> does not apply to paths starting with /. */
+export function rewriteRootRelativeAttributeUrls(
+  html: string,
+  embedPath: string,
+): string {
+  const base = normalizedEmbedBase(embedPath);
+  return html.replace(
+    ROOT_RELATIVE_ATTR_RE,
+    (match, attr: string, quote: string, rest: string) => {
+      const path = `/${rest}`;
+      if (path === base || path.startsWith(`${base}/`)) {
+        return match;
+      }
+      return `${attr}=${quote}${base}${path}${quote}`;
+    },
+  );
+}
+
+export function rewriteShopifyClientRoutes(html: string, embedPath: string): string {
+  const root = embedPath.endsWith("/") ? embedPath : `${embedPath}/`;
+  const base = normalizedEmbedBase(embedPath);
+  let out = html.replace(
+    /Shopify\.routes\.root\s*=\s*["']\/["']\s*;/g,
+    `Shopify.routes.root = "${root}";`,
+  );
+
+  out = out.replace(
+    /:\s*"(\/(?:account|cart|collections|products|pages|search|blogs)[^"]*)"/g,
+    (match, path: string) => {
+      if (path === base || path.startsWith(`${base}/`)) return match;
+      return `: "${base}${path}"`;
+    },
+  );
+
+  return out;
+}
+
+export function rewriteShopHtml(html: string, upstream: URL, embedPath: string): string {
   const host = upstream.host;
   const origin = upstream.origin;
   let out = html;
@@ -88,6 +132,9 @@ function rewriteShopHtml(html: string, upstream: URL, embedPath: string): string
   out = out.replaceAll(`//${host}/`, `${embedPath}/`);
   out = out.replaceAll(`//${host}"`, `${embedPath}"`);
   out = out.replaceAll(`//${host}'`, `${embedPath}'`);
+
+  out = rewriteRootRelativeAttributeUrls(out, embedPath);
+  out = rewriteShopifyClientRoutes(out, embedPath);
 
   const baseHref = `${embedPath}/`;
   if (!/<base\s/i.test(out)) {

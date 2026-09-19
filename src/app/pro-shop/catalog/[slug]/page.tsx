@@ -52,8 +52,8 @@ export default async function VendorCatalogPage({ params }: CatalogPageProps) {
   const catalogTitle = vendor.catalogTitle ?? vendor.title ?? "Catalog";
 
   return (
-    <section className="bg-zinc-950 py-10 text-white sm:py-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+    <section className="bg-zinc-950 py-6 text-white sm:py-8">
+      <div className="mx-auto w-full max-w-[100rem] px-3 sm:px-5 lg:px-6">
         <Link
           href={PRO_SHOP_ROUTE}
           className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-300 transition hover:text-white"
@@ -89,11 +89,11 @@ export default async function VendorCatalogPage({ params }: CatalogPageProps) {
           ) : null}
         </div>
 
-        <div className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-zinc-900 shadow-2xl shadow-black/30">
+        <div className="mt-6 overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-2xl shadow-black/30 sm:rounded-2xl">
           <iframe
             src={embedUrl}
             title={`${vendor.name} ${catalogTitle}`}
-            className="h-[72svh] min-h-[30rem] w-full bg-zinc-900 sm:h-[76vh] sm:min-h-[38rem] lg:h-[calc(100vh-10rem)] lg:min-h-[44rem]"
+            className="h-[min(88dvh,56rem)] min-h-[32rem] w-full bg-zinc-900 sm:h-[min(90dvh,60rem)] sm:min-h-[36rem] lg:h-[calc(100dvh-11rem)] lg:min-h-[42rem]"
             allow="fullscreen"
             allowFullScreen
             loading="eager"
