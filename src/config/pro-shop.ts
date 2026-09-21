@@ -42,5 +42,9 @@ export const PRO_SHOP_COPY = {
   heroImageAlt: "Easton baseball bats and player",
   vendorShopCta: "Shop",
   vendorCatalogCta: "Browse Catalog",
-  vendorExternalCta: "Continue to Vendor",
+  vendorExternalCta: "Shop on Baseline Sports",
+  vendorDiscountHeading: "Zero Limits Discount",
+  vendorDiscountBody:
+    "Use the Zero Limits discount code at checkout to receive 10% off.",
+  vendorDiscountCodeLabel: "10% off discount code:",
 } as const;

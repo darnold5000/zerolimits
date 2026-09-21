@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PRO_SHOP_ROUTE } from "@/config/pro-shop";
 import { SITE } from "@/lib/content";
-import { getVendorEmbedUrl } from "@/lib/pro-shop/catalog";
+import VendorDiscountCallout from "@/components/pro-shop/VendorDiscountCallout";
+import { getVendorEmbedUrl, getVendorExternalUrl } from "@/lib/pro-shop/catalog";
 import { fetchPublicProShopVendorBySlug } from "@/lib/pro-shop/queries";
 
 type CatalogPageProps = {
@@ -49,6 +50,7 @@ export default async function VendorCatalogPage({ params }: CatalogPageProps) {
   const embedUrl = getVendorEmbedUrl(vendor);
   if (!embedUrl) notFound();
 
+  const externalUrl = getVendorExternalUrl(vendor);
   const catalogTitle = vendor.catalogTitle ?? vendor.title ?? "Catalog";
 
   return (
@@ -80,12 +82,19 @@ export default async function VendorCatalogPage({ params }: CatalogPageProps) {
             </p>
           ) : null}
           {vendor.discountCode ? (
-            <div className="mt-5 inline-flex items-center gap-3 rounded-lg border border-red-500/40 bg-red-600/15 px-4 py-3">
-              <span className="text-sm font-semibold text-zinc-200">Discount code</span>
-              <strong className="rounded bg-white px-3 py-1 font-mono text-sm text-zinc-950">
-                {vendor.discountCode}
-              </strong>
-            </div>
+            <VendorDiscountCallout code={vendor.discountCode} variant="dark" />
+          ) : null}
+          {externalUrl ? (
+            <p className="mt-4">
+              <a
+                href={externalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-semibold text-red-400 underline decoration-red-500/60 underline-offset-4 transition hover:text-red-300"
+              >
+                Open Baseline Sports shop (Extra Innings)
+              </a>
+            </p>
           ) : null}
         </div>
 

@@ -42,6 +42,12 @@ describe("vendor proxy allowlist", () => {
     assert.equal(target.search, "?ref=zl");
   });
 
+  it("preserves affiliate query params from the configured shop URL", () => {
+    const affiliateShop = new URL("https://www.baselinesports.us?aff=217");
+    const target = resolveProxyTarget(affiliateShop, [], "");
+    assert.equal(target.search, "?aff=217");
+  });
+
   it("rejects protocol-relative and parent-path segments", () => {
     assert.throws(() => resolveProxyTarget(shop, ["..", "secret"], ""));
     assert.throws(() => resolveProxyTarget(shop, ["//evil.example"], ""));

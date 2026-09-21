@@ -57,7 +57,7 @@ export function resolveProxyTarget(
   const target = new URL(shopOrigin.origin);
   target.pathname =
     raw.length > 0 ? `/${raw.join("/")}` : shopOrigin.pathname || "/";
-  target.search = search;
+  target.search = search || shopOrigin.search;
 
   if (!isAllowedProxyUrl(target, shopOrigin)) {
     throw new Error("Proxy target not allowed");
