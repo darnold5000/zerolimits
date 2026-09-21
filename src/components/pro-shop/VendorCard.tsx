@@ -4,7 +4,7 @@ import type { PublicProShopVendor } from "@/lib/pro-shop/queries";
 import { PRO_SHOP_COPY } from "@/config/pro-shop";
 import { SITE } from "@/lib/content";
 import VendorDiscountCallout from "@/components/pro-shop/VendorDiscountCallout";
-import { getVendorCatalogAction, getVendorExternalUrl } from "@/lib/pro-shop/catalog";
+import { getVendorCatalogAction } from "@/lib/pro-shop/catalog";
 
 type VendorCardProps = {
   vendor: PublicProShopVendor;
@@ -27,7 +27,6 @@ function noteWithPhone(note: string) {
 
 export default function VendorCard({ vendor, reverse = false }: VendorCardProps) {
   const catalogAction = getVendorCatalogAction(vendor);
-  const externalUrl = getVendorExternalUrl(vendor);
 
   return (
     <article className="grid overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-lg shadow-zinc-200/50 lg:grid-cols-2 lg:items-stretch">
@@ -52,26 +51,14 @@ export default function VendorCard({ vendor, reverse = false }: VendorCardProps)
         {vendor.fulfillmentNote ? (
           <p className="mt-3 text-sm text-zinc-600">{noteWithPhone(vendor.fulfillmentNote)}</p>
         ) : null}
-        {catalogAction || externalUrl ? (
+        {catalogAction ? (
           <div className="mt-6 flex flex-wrap gap-3">
-            {catalogAction ? (
-              <Link
-                href={catalogAction.href}
-                className="inline-flex rounded-md bg-red-600 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
-              >
-                {PRO_SHOP_COPY.vendorCatalogCta}
-              </Link>
-            ) : null}
-            {externalUrl ? (
-              <a
-                href={externalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex rounded-md border border-zinc-300 bg-white px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-zinc-900 transition hover:border-red-300 hover:text-red-700"
-              >
-                {PRO_SHOP_COPY.vendorExternalCta}
-              </a>
-            ) : null}
+            <Link
+              href={catalogAction.href}
+              className="inline-flex rounded-md bg-red-600 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
+            >
+              {PRO_SHOP_COPY.vendorCatalogCta}
+            </Link>
           </div>
         ) : null}
       </div>
