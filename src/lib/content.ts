@@ -195,7 +195,7 @@ export const WHY_CHOOSE = [
 export const COACHES = [
   { name: "Coach Derek DeVaughan", role: "Owner / Instructor" },
   { name: "Coach Eric McGaha", role: "Instructor" },
-  { name: "Michael McAvene (Coach Mac)", role: "Pitching Instructor" },
+  { name: 'Michael McAvene "Coach Mac"', role: "Pitching Instructor" },
   { name: "Tim Denny", role: "Instructor" },
   { name: "Blake Allen", role: "Instructor" },
 ] as const;
