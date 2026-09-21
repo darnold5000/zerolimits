@@ -6,6 +6,7 @@ export type CoachSection = {
 export type Coach = {
   id: string;
   name: string;
+  nickname?: string;
   role: string;
   image: string;
   imageAlt: string;
@@ -57,6 +58,7 @@ export const COACHES: Coach[] = [
   {
     id: "michael-mcavene",
     name: "Michael McAvene",
+    nickname: "Coach Mac",
     role: "Pitching Instructor",
     image: "/images/coaches/michael-mcavene.png",
     imageAlt: "Michael McAvene pitching",

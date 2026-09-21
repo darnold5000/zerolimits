@@ -45,6 +45,9 @@ export default function CoachProfile({
         <h3 className="mt-2 font-display text-2xl font-bold text-white sm:text-3xl">
           {coach.name}
         </h3>
+        {coach.nickname ? (
+          <p className="mt-1 text-lg font-medium text-zinc-400">({coach.nickname})</p>
+        ) : null}
 
         {coach.intro ? (
           <p className="mt-4 text-base leading-relaxed text-zinc-300">{coach.intro}</p>
