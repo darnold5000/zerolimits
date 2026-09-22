@@ -224,7 +224,7 @@ export const PRICING = [
 ] as const;
 
 export const PRICING_NOTE =
-  "The first child pays full price. Each additional sibling receives 20% off.";
+  "The first sibling pays full price. Each additional sibling receives 10% off their session total.";
 
 export const PRICING_NOTE_RESTRICTION =
   "Discount applies to sessions of 60 minutes or longer. Siblings must complete their sessions during the same calendar week.";
