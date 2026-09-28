@@ -159,6 +159,60 @@ function normalizedEmbedBase(embedPath: string): string {
   return embedPath.endsWith("/") ? embedPath.slice(0, -1) : embedPath;
 }
 
+function escapeJsString(value: string): string {
+  return value
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"')
+    .replace(/'/g, "\\'")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029")
+    .replace(/</g, "\\u003c");
+}
+
+/** Shopify checkout cannot run inside an iframe; send the top window to hosted checkout. */
+export function externalCheckoutBreakoutHtml(checkoutUrl: string): string {
+  const safeUrl = escapeJsString(checkoutUrl);
+  const safeHref = checkoutUrl
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;");
+
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Checkout</title><script>window.top.location.replace("${safeUrl}");</script></head><body style="margin:0;background:#111;color:#fff;font-family:system-ui,sans-serif"><p style="padding:1.5rem">Redirecting to secure checkout…</p><p style="padding:0 1.5rem"><a href="${safeHref}" target="_top" style="color:#6eb6ff">Continue to checkout</a></p></body></html>`;
+}
+
+const EMBED_IFRAME_CHECKOUT_SCRIPT = `<script>(function(){if(window.top===window.self)return;function go(url){try{window.top.location.replace(url);}catch(e){window.top.location.href=url;}}document.addEventListener("click",function(ev){var a=ev.target&&ev.target.closest?ev.target.closest("a[href]"):null;if(!a)return;var href=a.getAttribute("href")||"";if(!/checkout/i.test(href))return;ev.preventDefault();ev.stopPropagation();go(a.href);},true);if(/\\/checkout/i.test(window.location.pathname)){go(window.location.href);}})();</script>`;
+
+function responseWithProxyCookies(
+  upstream: Headers,
+  embedPath: string,
+): Headers {
+  const headers = stripHopByHopHeaders(upstream);
+  applyProxySetCookies(headers, upstream, embedPath);
+  headers.set("cache-control", "no-store");
+  return headers;
+}
+
+function externalCheckoutBreakoutResponse(
+  checkoutUrl: string,
+  upstream: Headers,
+  embedPath: string,
+): Response {
+  const headers = responseWithProxyCookies(upstream, embedPath);
+  headers.set("content-type", "text/html; charset=utf-8");
+  return new Response(externalCheckoutBreakoutHtml(checkoutUrl), {
+    status: 200,
+    headers,
+  });
+}
+
+function resolveRedirectUrl(location: string, base: URL): URL | null {
+  try {
+    return new URL(location, base);
+  } catch {
+    return null;
+  }
+}
+
 /** Keep cart/checkout redirects inside the embed proxy path. */
 export function rewriteProxyLocationHeader(
   location: string,
@@ -259,6 +313,38 @@ export function rewriteShopHtml(html: string, upstream: URL, embedPath: string):
     out = out.replace(/<head(\s[^>]*)?>/i, `<head$1><base href="${baseHref}">`);
   }
 
+  if (!out.includes("window.top.location.replace")) {
+    out = out.replace(/<\/head>/i, `${EMBED_IFRAME_CHECKOUT_SCRIPT}</head>`);
+  }
+
+  return out;
+}
+
+/** Cart drawer / section JSON includes HTML snippets with checkout links. */
+export function rewriteShopifyAjaxPayload(
+  body: string,
+  upstream: URL,
+  embedPath: string,
+): string {
+  const host = upstream.host;
+  const origin = upstream.origin;
+  let out = body;
+
+  out = out.replaceAll(`${origin}/`, `${embedPath}/`);
+  out = out.replaceAll(`${origin}"`, `${embedPath}"`);
+  out = out.replaceAll(`${origin}'`, `${embedPath}'`);
+  out = out.replaceAll(`//${host}/`, `${embedPath}/`);
+  out = rewriteRootRelativeAttributeUrls(out, embedPath);
+
+  out = out.replace(
+    /href=(["'])([^"']*checkout[^"']*)\1/gi,
+    (match, quote: string, href: string) => {
+      if (/target\s*=/i.test(match)) return match;
+      const path = href.startsWith("/") ? `${normalizedEmbedBase(embedPath)}${href}` : href;
+      return `href=${quote}${path}${quote} target=${quote}_top${quote}`;
+    },
+  );
+
   return out;
 }
 
@@ -314,15 +400,15 @@ export async function proxyVendorShopRequest(
     const location = upstreamResponse.headers.get("location");
     if (!location) return proxyUnavailable();
 
-    let next: URL;
-    try {
-      next = new URL(location, target);
-    } catch {
-      return proxyUnavailable();
-    }
+    const next = resolveRedirectUrl(location, target);
+    if (!next) return proxyUnavailable();
 
     if (!isAllowedProxyUrl(next, shopOrigin)) {
-      return proxyUnavailable();
+      return externalCheckoutBreakoutResponse(
+        next.toString(),
+        upstreamResponse.headers,
+        embedPath,
+      );
     }
 
     target = next;
@@ -336,6 +422,22 @@ export async function proxyVendorShopRequest(
   applyProxySetCookies(headers, upstreamResponse.headers, embedPath);
   const contentType = upstreamResponse.headers.get("content-type") ?? "";
   const location = upstreamResponse.headers.get("location");
+
+  if (
+    location &&
+    upstreamResponse.status >= 300 &&
+    upstreamResponse.status < 400
+  ) {
+    const external = resolveRedirectUrl(location, rewriteOrigin);
+    if (external && !isAllowedProxyUrl(external, shopOrigin)) {
+      return externalCheckoutBreakoutResponse(
+        external.toString(),
+        upstreamResponse.headers,
+        embedPath,
+      );
+    }
+  }
+
   if (location) {
     headers.set(
       "location",
@@ -350,6 +452,16 @@ export async function proxyVendorShopRequest(
   if (contentType.includes("text/html")) {
     const html = await upstreamResponse.text();
     const body = rewriteShopHtml(html, rewriteOrigin, embedPath);
+    headers.set("content-type", contentType);
+    return new Response(body, { status: upstreamResponse.status, headers });
+  }
+
+  if (
+    contentType.includes("application/json") ||
+    contentType.includes("javascript")
+  ) {
+    const text = await upstreamResponse.text();
+    const body = rewriteShopifyAjaxPayload(text, rewriteOrigin, embedPath);
     headers.set("content-type", contentType);
     return new Response(body, { status: upstreamResponse.status, headers });
   }

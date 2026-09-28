@@ -5,7 +5,9 @@ import {
   isAllowedProxyUrl,
   resolveProxyTarget,
   rewriteProxyLocationHeader,
+  externalCheckoutBreakoutHtml,
   rewriteProxySetCookieHeader,
+  rewriteShopifyAjaxPayload,
   rewriteRootRelativeAttributeUrls,
   rewriteShopHtml,
   rewriteShopifyClientRoutes,
@@ -88,6 +90,15 @@ describe("shop html rewrite", () => {
       /href="\/pro-shop\/embed\/baseline-sports\/collections\/all"/,
     );
     assert.match(out, /<base href="\/pro-shop\/embed\/baseline-sports\/">/);
+  });
+});
+
+describe("checkout breakout", () => {
+  it("redirects the top window to hosted Shopify checkout", () => {
+    const url = "https://checkout.shopify.com/c/abc123";
+    const html = externalCheckoutBreakoutHtml(url);
+    assert.match(html, /window\.top\.location\.replace\("https:\/\/checkout\.shopify\.com\/c\/abc123"\)/);
+    assert.match(html, /target="_top"/);
   });
 });
 
