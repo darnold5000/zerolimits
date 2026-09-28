@@ -47,4 +47,8 @@ export const PRO_SHOP_COPY = {
   vendorDiscountBody:
     "Enter this code on Baseline Sports checkout if you want 10% off. It is not applied automatically in the shop or cart.",
   vendorDiscountCodeLabel: "10% off discount code:",
+  vendorStorefrontDiscountBanner: {
+    prefix: "Save 10% with Zero Limits — Use code",
+    suffix: "at checkout",
+  },
 } as const;
