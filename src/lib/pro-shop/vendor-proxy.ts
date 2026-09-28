@@ -177,10 +177,10 @@ export function externalCheckoutBreakoutHtml(checkoutUrl: string): string {
     .replace(/"/g, "&quot;")
     .replace(/</g, "&lt;");
 
-  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Checkout</title><script>window.top.location.replace("${safeUrl}");</script></head><body style="margin:0;background:#111;color:#fff;font-family:system-ui,sans-serif"><p style="padding:1.5rem">Redirecting to secure checkout…</p><p style="padding:0 1.5rem"><a href="${safeHref}" target="_top" style="color:#6eb6ff">Continue to checkout</a></p></body></html>`;
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Checkout</title><script>(function(){var dest="${safeUrl}";var nav=window.top===window.self?window.location:window.top.location;nav.replace(dest);})();</script></head><body style="margin:0;background:#111;color:#fff;font-family:system-ui,sans-serif"><p style="padding:1.5rem">Redirecting to secure checkout…</p><p style="padding:0 1.5rem"><a href="${safeHref}" style="color:#6eb6ff">Continue to checkout</a></p></body></html>`;
 }
 
-const EMBED_IFRAME_CHECKOUT_SCRIPT = `<script>(function(){if(window.top===window.self)return;function go(url){try{window.top.location.replace(url);}catch(e){window.top.location.href=url;}}document.addEventListener("click",function(ev){var a=ev.target&&ev.target.closest?ev.target.closest("a[href]"):null;if(!a)return;var href=a.getAttribute("href")||"";if(!/checkout/i.test(href))return;ev.preventDefault();ev.stopPropagation();go(a.href);},true);if(/\\/checkout/i.test(window.location.pathname)){go(window.location.href);}})();</script>`;
+const EMBED_IFRAME_CHECKOUT_SCRIPT = `<script>(function(){function go(url){var nav=window.top===window.self?window.location:window.top.location;try{nav.replace(url);}catch(e){nav.href=url;}}document.addEventListener("click",function(ev){var a=ev.target&&ev.target.closest?ev.target.closest("a[href]"):null;if(!a)return;var href=a.getAttribute("href")||"";if(!/checkout/i.test(href))return;ev.preventDefault();ev.stopPropagation();go(a.href);},true);if(/checkout/i.test(window.location.pathname)){go(window.location.href);}})();</script>`;
 
 function responseWithProxyCookies(
   upstream: Headers,
@@ -211,6 +211,87 @@ function resolveRedirectUrl(location: string, base: URL): URL | null {
   } catch {
     return null;
   }
+}
+
+function isShopCheckoutPath(pathSegments: string[]): boolean {
+  const root = pathSegments[0]?.toLowerCase() ?? "";
+  return root === "checkout" || root === "checkouts";
+}
+
+function ensureShopReferralParams(target: URL, shopOrigin: URL): URL {
+  const next = new URL(target.toString());
+  shopOrigin.searchParams.forEach((value, key) => {
+    if (!next.searchParams.has(key)) {
+      next.searchParams.set(key, value);
+    }
+  });
+  return next;
+}
+
+function externalShopCheckoutUrl(shopOrigin: URL, pathSegments: string[], search: string): string {
+  return ensureShopReferralParams(
+    resolveProxyTarget(shopOrigin, pathSegments, search),
+    shopOrigin,
+  ).toString();
+}
+
+/** Shopify checkout pages cannot be proxied (403/Forbidden HTML). Resolve cart checkout and send shoppers to the live shop. */
+async function proxyCheckoutHandoff(
+  request: Request,
+  pathSegments: string[],
+  shopOrigin: URL,
+  embedPath: string,
+  requestSearch: string,
+): Promise<Response> {
+  const method = request.method === "HEAD" ? "HEAD" : "GET";
+  let current = resolveProxyTarget(shopOrigin, pathSegments, requestSearch);
+  let lastResponseHeaders = new Headers();
+
+  for (let hop = 0; hop <= MAX_PROXY_REDIRECTS; hop += 1) {
+    const upstream = await fetch(current.toString(), {
+      method,
+      headers: buildUpstreamRequestHeaders(request),
+      redirect: "manual",
+      cache: "no-store",
+    });
+    lastResponseHeaders = upstream.headers;
+
+    if (upstream.status >= 300 && upstream.status < 400) {
+      const location = upstream.headers.get("location");
+      const next = location ? resolveRedirectUrl(location, current) : null;
+      if (!next) break;
+
+      if (
+        !isAllowedProxyUrl(next, shopOrigin) ||
+        next.pathname.startsWith("/checkouts")
+      ) {
+        return externalCheckoutBreakoutResponse(
+          ensureShopReferralParams(next, shopOrigin).toString(),
+          upstream.headers,
+          embedPath,
+        );
+      }
+
+      current = next;
+      continue;
+    }
+
+    if (current.pathname.startsWith("/checkouts")) {
+      return externalCheckoutBreakoutResponse(
+        ensureShopReferralParams(current, shopOrigin).toString(),
+        upstream.headers,
+        embedPath,
+      );
+    }
+
+    break;
+  }
+
+  return externalCheckoutBreakoutResponse(
+    externalShopCheckoutUrl(shopOrigin, pathSegments, requestSearch),
+    lastResponseHeaders,
+    embedPath,
+  );
 }
 
 /** Keep cart/checkout redirects inside the embed proxy path. */
@@ -379,6 +460,16 @@ export async function proxyVendorShopRequest(
   const requestBody =
     method === "GET" || method === "HEAD" ? undefined : await request.arrayBuffer();
 
+  if (isShopCheckoutPath(pathSegments) && method !== "POST") {
+    return proxyCheckoutHandoff(
+      request,
+      pathSegments,
+      shopOrigin,
+      embedPath,
+      requestUrl.search,
+    );
+  }
+
   let target = resolveProxyTarget(shopOrigin, pathSegments, requestUrl.search);
   let upstreamResponse: Response | null = null;
   let rewriteOrigin = shopOrigin;
@@ -405,7 +496,15 @@ export async function proxyVendorShopRequest(
 
     if (!isAllowedProxyUrl(next, shopOrigin)) {
       return externalCheckoutBreakoutResponse(
-        next.toString(),
+        ensureShopReferralParams(next, shopOrigin).toString(),
+        upstreamResponse.headers,
+        embedPath,
+      );
+    }
+
+    if (next.pathname.startsWith("/checkouts")) {
+      return externalCheckoutBreakoutResponse(
+        ensureShopReferralParams(next, shopOrigin).toString(),
         upstreamResponse.headers,
         embedPath,
       );
@@ -431,7 +530,7 @@ export async function proxyVendorShopRequest(
     const external = resolveRedirectUrl(location, rewriteOrigin);
     if (external && !isAllowedProxyUrl(external, shopOrigin)) {
       return externalCheckoutBreakoutResponse(
-        external.toString(),
+        ensureShopReferralParams(external, shopOrigin).toString(),
         upstreamResponse.headers,
         embedPath,
       );

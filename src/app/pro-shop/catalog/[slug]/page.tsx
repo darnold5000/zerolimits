@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { PRO_SHOP_ROUTE } from "@/config/pro-shop";
 import { SITE } from "@/lib/content";
 import VendorDiscountCallout from "@/components/pro-shop/VendorDiscountCallout";
+import VendorShopEmbedFrame from "@/components/pro-shop/VendorShopEmbedFrame";
 import { getVendorEmbedUrl } from "@/lib/pro-shop/catalog";
 import { fetchPublicProShopVendorBySlug } from "@/lib/pro-shop/queries";
 
@@ -86,14 +87,10 @@ export default async function VendorCatalogPage({ params }: CatalogPageProps) {
         </div>
 
         <div className="mt-6 overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-2xl shadow-black/30 sm:rounded-2xl">
-          <iframe
+          <VendorShopEmbedFrame
             src={embedUrl}
             title={`${vendor.name} ${catalogTitle}`}
             className="h-[min(88dvh,56rem)] min-h-[32rem] w-full bg-zinc-900 sm:h-[min(90dvh,60rem)] sm:min-h-[36rem] lg:h-[calc(100dvh-11rem)] lg:min-h-[42rem]"
-            allow="fullscreen"
-            allowFullScreen
-            loading="eager"
-            referrerPolicy="strict-origin-when-cross-origin"
           />
         </div>
       </div>

@@ -97,8 +97,11 @@ describe("checkout breakout", () => {
   it("redirects the top window to hosted Shopify checkout", () => {
     const url = "https://checkout.shopify.com/c/abc123";
     const html = externalCheckoutBreakoutHtml(url);
-    assert.match(html, /window\.top\.location\.replace\("https:\/\/checkout\.shopify\.com\/c\/abc123"\)/);
-    assert.match(html, /target="_top"/);
+    assert.match(
+      html,
+      /window\.top===window\.self\?window\.location:window\.top\.location/,
+    );
+    assert.match(html, /nav\.replace\("https:\/\/checkout\.shopify\.com\/c\/abc123"\)/);
   });
 });
 
