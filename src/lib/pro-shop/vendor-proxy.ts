@@ -264,35 +264,6 @@ function externalShopCheckoutUrl(shopOrigin: URL, pathSegments: string[], search
   ).toString();
 }
 
-/** Shopify applies codes via /discount/{code}?redirect=… — not from the embed alone. */
-export function wrapCheckoutUrlWithShopDiscount(
-  checkoutUrl: string,
-  shopOrigin: URL,
-  discountCode: string | null | undefined,
-): string {
-  const code = discountCode?.trim();
-  if (!code) return checkoutUrl;
-
-  let checkout: URL;
-  try {
-    checkout = new URL(checkoutUrl);
-  } catch {
-    return checkoutUrl;
-  }
-
-  if (hostnameWithoutWww(checkout.host) !== hostnameWithoutWww(shopOrigin.host)) {
-    return checkoutUrl;
-  }
-
-  const withAffiliate = ensureShopReferralParams(checkout, shopOrigin);
-  const redirectTarget = `${withAffiliate.pathname}${withAffiliate.search}${withAffiliate.hash}`;
-  const discountLanding = new URL(shopOrigin.origin);
-  discountLanding.pathname = `/discount/${encodeURIComponent(code)}`;
-  discountLanding.searchParams.set("redirect", redirectTarget);
-
-  return ensureShopReferralParams(discountLanding, shopOrigin).toString();
-}
-
 function finalizeHandoffCheckoutUrl(
   checkoutUrl: string,
   shopOrigin: URL,
@@ -388,18 +359,6 @@ async function followShopifyHandoff(
   return null;
 }
 
-/** Apply ZL10 on Baseline's session server-side; pre-built checkout URLs ignore /discount redirects. */
-async function resolveDiscountedCheckoutHandoffUrl(
-  request: Request,
-  shopOrigin: URL,
-  discountCode: string,
-): Promise<{ url: string; headers: Headers } | null> {
-  const discountUrl = ensureShopReferralParams(new URL(shopOrigin.origin), shopOrigin);
-  discountUrl.pathname = `/discount/${encodeURIComponent(discountCode.trim())}`;
-  discountUrl.searchParams.set("redirect", "/checkout");
-  return followShopifyHandoff(request, shopOrigin, discountUrl);
-}
-
 /** Shopify checkout pages cannot be proxied (403/Forbidden HTML). Resolve cart checkout and send shoppers to the live shop. */
 async function proxyCheckoutHandoff(
   request: Request,
@@ -407,25 +366,8 @@ async function proxyCheckoutHandoff(
   shopOrigin: URL,
   embedPath: string,
   requestSearch: string,
-  discountCode: string | null | undefined,
 ): Promise<Response> {
   const method = request.method === "HEAD" ? "HEAD" : "GET";
-  const code = discountCode?.trim();
-
-  if (code) {
-    const discounted = await resolveDiscountedCheckoutHandoffUrl(
-      request,
-      shopOrigin,
-      code,
-    );
-    if (discounted) {
-      return externalCheckoutBreakoutResponse(
-        discounted.url,
-        discounted.headers,
-        embedPath,
-      );
-    }
-  }
 
   const start = resolveProxyTarget(shopOrigin, pathSegments, requestSearch);
   const resolved = await followShopifyHandoff(
@@ -590,7 +532,6 @@ export function rewriteShopifyAjaxPayload(
 export type VendorShopProxyInput = {
   slug: string;
   shopUrl: string;
-  discountCode?: string | null;
 };
 
 function proxyUnavailable(): Response {
@@ -626,7 +567,6 @@ export async function proxyVendorShopRequest(
       shopOrigin,
       embedPath,
       requestUrl.search,
-      vendor.discountCode,
     );
   }
 

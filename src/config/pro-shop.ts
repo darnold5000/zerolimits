@@ -45,6 +45,6 @@ export const PRO_SHOP_COPY = {
   vendorExternalCta: "Shop on Baseline Sports",
   vendorDiscountHeading: "Zero Limits Discount",
   vendorDiscountBody:
-    "Use the Zero Limits discount code at checkout to receive 10% off.",
+    "Enter this code on Baseline Sports checkout if you want 10% off. It is not applied automatically in the shop or cart.",
   vendorDiscountCodeLabel: "10% off discount code:",
 } as const;
