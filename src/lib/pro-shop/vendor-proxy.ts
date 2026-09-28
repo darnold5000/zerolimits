@@ -296,13 +296,108 @@ export function wrapCheckoutUrlWithShopDiscount(
 function finalizeHandoffCheckoutUrl(
   checkoutUrl: string,
   shopOrigin: URL,
-  discountCode: string | null | undefined,
 ): string {
-  return wrapCheckoutUrlWithShopDiscount(
-    ensureShopReferralParams(new URL(checkoutUrl), shopOrigin).toString(),
-    shopOrigin,
-    discountCode,
-  );
+  return ensureShopReferralParams(new URL(checkoutUrl), shopOrigin).toString();
+}
+
+function parseCookieJar(cookieHeader: string | null): Map<string, string> {
+  const jar = new Map<string, string>();
+  if (!cookieHeader) return jar;
+  for (const part of cookieHeader.split(";")) {
+    const trimmed = part.trim();
+    if (!trimmed) continue;
+    const eq = trimmed.indexOf("=");
+    if (eq === -1) continue;
+    jar.set(trimmed.slice(0, eq), trimmed.slice(eq + 1));
+  }
+  return jar;
+}
+
+function cookieHeaderFromJar(jar: Map<string, string>): string | null {
+  if (jar.size === 0) return null;
+  return [...jar.entries()].map(([name, value]) => `${name}=${value}`).join("; ");
+}
+
+function absorbShopifySetCookies(jar: Map<string, string>, response: Headers): void {
+  for (const raw of upstreamSetCookies(response)) {
+    const nameValue = raw.split(";")[0]?.trim();
+    if (!nameValue) continue;
+    const eq = nameValue.indexOf("=");
+    if (eq === -1) continue;
+    const name = nameValue.slice(0, eq);
+    const value = nameValue.slice(eq + 1);
+    if (!value) jar.delete(name);
+    else jar.set(name, value);
+  }
+}
+
+function buildHandoffFetchHeaders(
+  request: Request,
+  jar: Map<string, string>,
+): Headers {
+  const headers = buildUpstreamRequestHeaders(request);
+  const cookie = cookieHeaderFromJar(jar);
+  if (cookie) headers.set("cookie", cookie);
+  return headers;
+}
+
+async function followShopifyHandoff(
+  request: Request,
+  shopOrigin: URL,
+  startUrl: URL,
+  method: "GET" | "HEAD" = "GET",
+): Promise<{ url: string; headers: Headers } | null> {
+  const jar = parseCookieJar(request.headers.get("cookie"));
+  let current = startUrl;
+  let lastHeaders = new Headers();
+
+  for (let hop = 0; hop <= MAX_PROXY_REDIRECTS; hop += 1) {
+    const upstream = await fetch(current.toString(), {
+      method,
+      headers: buildHandoffFetchHeaders(request, jar),
+      redirect: "manual",
+      cache: "no-store",
+    });
+    absorbShopifySetCookies(jar, upstream.headers);
+    lastHeaders = upstream.headers;
+
+    if (upstream.status >= 300 && upstream.status < 400) {
+      const location = upstream.headers.get("location");
+      const next = location ? resolveRedirectUrl(location, current) : null;
+      if (!next || !isAllowedProxyUrl(next, shopOrigin)) return null;
+      if (next.pathname.startsWith("/checkouts")) {
+        return {
+          url: finalizeHandoffCheckoutUrl(next.toString(), shopOrigin),
+          headers: upstream.headers,
+        };
+      }
+      current = next;
+      continue;
+    }
+
+    if (current.pathname.startsWith("/checkouts")) {
+      return {
+        url: finalizeHandoffCheckoutUrl(current.toString(), shopOrigin),
+        headers: lastHeaders,
+      };
+    }
+
+    break;
+  }
+
+  return null;
+}
+
+/** Apply ZL10 on Baseline's session server-side; pre-built checkout URLs ignore /discount redirects. */
+async function resolveDiscountedCheckoutHandoffUrl(
+  request: Request,
+  shopOrigin: URL,
+  discountCode: string,
+): Promise<{ url: string; headers: Headers } | null> {
+  const discountUrl = ensureShopReferralParams(new URL(shopOrigin.origin), shopOrigin);
+  discountUrl.pathname = `/discount/${encodeURIComponent(discountCode.trim())}`;
+  discountUrl.searchParams.set("redirect", "/checkout");
+  return followShopifyHandoff(request, shopOrigin, discountUrl);
 }
 
 /** Shopify checkout pages cannot be proxied (403/Forbidden HTML). Resolve cart checkout and send shoppers to the live shop. */
@@ -315,56 +410,38 @@ async function proxyCheckoutHandoff(
   discountCode: string | null | undefined,
 ): Promise<Response> {
   const method = request.method === "HEAD" ? "HEAD" : "GET";
-  let current = resolveProxyTarget(shopOrigin, pathSegments, requestSearch);
-  let lastResponseHeaders = new Headers();
+  const code = discountCode?.trim();
 
-  for (let hop = 0; hop <= MAX_PROXY_REDIRECTS; hop += 1) {
-    const upstream = await fetch(current.toString(), {
-      method,
-      headers: buildUpstreamRequestHeaders(request),
-      redirect: "manual",
-      cache: "no-store",
-    });
-    lastResponseHeaders = upstream.headers;
-
-    if (upstream.status >= 300 && upstream.status < 400) {
-      const location = upstream.headers.get("location");
-      const next = location ? resolveRedirectUrl(location, current) : null;
-      if (!next) break;
-
-      if (
-        !isAllowedProxyUrl(next, shopOrigin) ||
-        next.pathname.startsWith("/checkouts")
-      ) {
-        return externalCheckoutBreakoutResponse(
-          finalizeHandoffCheckoutUrl(next.toString(), shopOrigin, discountCode),
-          upstream.headers,
-          embedPath,
-        );
-      }
-
-      current = next;
-      continue;
-    }
-
-    if (current.pathname.startsWith("/checkouts")) {
+  if (code) {
+    const discounted = await resolveDiscountedCheckoutHandoffUrl(
+      request,
+      shopOrigin,
+      code,
+    );
+    if (discounted) {
       return externalCheckoutBreakoutResponse(
-        finalizeHandoffCheckoutUrl(current.toString(), shopOrigin, discountCode),
-        upstream.headers,
+        discounted.url,
+        discounted.headers,
         embedPath,
       );
     }
-
-    break;
   }
 
+  const start = resolveProxyTarget(shopOrigin, pathSegments, requestSearch);
+  const resolved = await followShopifyHandoff(
+    request,
+    shopOrigin,
+    start,
+    method,
+  );
+
   return externalCheckoutBreakoutResponse(
-    finalizeHandoffCheckoutUrl(
-      externalShopCheckoutUrl(shopOrigin, pathSegments, requestSearch),
-      shopOrigin,
-      discountCode,
-    ),
-    lastResponseHeaders,
+    resolved?.url ??
+      finalizeHandoffCheckoutUrl(
+        externalShopCheckoutUrl(shopOrigin, pathSegments, requestSearch),
+        shopOrigin,
+      ),
+    resolved?.headers ?? new Headers(),
     embedPath,
   );
 }
