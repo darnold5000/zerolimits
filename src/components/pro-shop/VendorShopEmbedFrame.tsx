@@ -44,7 +44,7 @@ export default function VendorShopEmbedFrame({
       ref={iframeRef}
       src={src}
       title={title}
-      className={className}
+      className={["block w-full max-w-none border-0", className].filter(Boolean).join(" ")}
       allow="fullscreen"
       allowFullScreen
       loading="eager"

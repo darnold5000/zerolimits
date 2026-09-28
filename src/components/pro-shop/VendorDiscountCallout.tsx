@@ -3,11 +3,13 @@ import { PRO_SHOP_COPY } from "@/config/pro-shop";
 type VendorDiscountCalloutProps = {
   code: string;
   variant?: "light" | "dark";
+  className?: string;
 };
 
 export default function VendorDiscountCallout({
   code,
   variant = "light",
+  className = "",
 }: VendorDiscountCalloutProps) {
   const isDark = variant === "dark";
 
@@ -15,8 +17,8 @@ export default function VendorDiscountCallout({
     <div
       className={
         isDark
-          ? "mt-5 rounded-xl border border-red-500/40 bg-red-600/10 px-4 py-4 sm:px-5 sm:py-5"
-          : "mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-4 sm:px-5 sm:py-5"
+          ? `mt-5 rounded-xl border border-red-500/40 bg-red-600/10 px-4 py-4 sm:px-5 sm:py-5 ${className}`.trim()
+          : `mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-4 sm:px-5 sm:py-5 ${className}`.trim()
       }
     >
       <p
