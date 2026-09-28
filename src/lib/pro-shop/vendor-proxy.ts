@@ -182,6 +182,35 @@ export function externalCheckoutBreakoutHtml(checkoutUrl: string): string {
 
 const EMBED_IFRAME_CHECKOUT_SCRIPT = `<script>(function(){function go(url){var nav=window.top===window.self?window.location:window.top.location;try{nav.replace(url);}catch(e){nav.href=url;}}document.addEventListener("click",function(ev){var a=ev.target&&ev.target.closest?ev.target.closest("a[href]"):null;if(!a)return;var href=a.getAttribute("href")||"";if(!/checkout/i.test(href))return;ev.preventDefault();ev.stopPropagation();go(a.href);},true);if(/checkout/i.test(window.location.pathname)){go(window.location.href);}})();</script>`;
 
+/** Theme AJAX (InstantClick) blocks remove/qty updates in the embed; use full cart form navigation. */
+const EMBED_CART_FALLBACK_SCRIPT = `<script>(function(){document.addEventListener("click",function(ev){var link=ev.target&&ev.target.closest?ev.target.closest("a[data-cartitem-remove],a.cart-item--remove-link"):null;if(!link||!link.href)return;ev.preventDefault();ev.stopImmediatePropagation();window.location.href=link.href;},true);document.addEventListener("change",function(ev){var input=ev.target;if(!input||!input.closest)return;var form=input.closest('form[action*="/cart"]');if(!form||input.name!=="updates[]")return;ev.preventDefault();ev.stopImmediatePropagation();form.submit();},true);})();</script>`;
+
+const SHOP_EMBED_PATH_PREFIX =
+  "(?:cart|account|checkout|checkouts|collections|products|pages|search|blogs)";
+
+export function rewriteEmbedShopPathsInText(text: string, embedPath: string): string {
+  const base = normalizedEmbedBase(embedPath);
+  const prefixPath = (path: string) => {
+    if (path === base || path.startsWith(`${base}/`)) return path;
+    return `${base}${path}`;
+  };
+
+  let out = text.replace(
+    new RegExp(`"(/${SHOP_EMBED_PATH_PREFIX}[^"]*)"`, "g"),
+    (_match, path: string) => `"${prefixPath(path)}"`,
+  );
+
+  out = out.replace(
+    new RegExp(`"\\\\/(${SHOP_EMBED_PATH_PREFIX}[^"]*)"`, "g"),
+    (_match, path: string) => {
+      const prefixed = prefixPath(`/${path}`);
+      return `"\\/${prefixed.slice(1).replace(/\//g, "\\/")}"`;
+    },
+  );
+
+  return out;
+}
+
 function responseWithProxyCookies(
   upstream: Headers,
   embedPath: string,
@@ -444,6 +473,10 @@ export function rewriteShopHtml(html: string, upstream: URL, embedPath: string):
     out = out.replace(/<\/head>/i, `${EMBED_IFRAME_CHECKOUT_SCRIPT}</head>`);
   }
 
+  if (!out.includes("stopImmediatePropagation();window.location.href=link.href")) {
+    out = out.replace(/<\/head>/i, `${EMBED_CART_FALLBACK_SCRIPT}</head>`);
+  }
+
   return out;
 }
 
@@ -462,6 +495,8 @@ export function rewriteShopifyAjaxPayload(
   out = out.replaceAll(`${origin}'`, `${embedPath}'`);
   out = out.replaceAll(`//${host}/`, `${embedPath}/`);
   out = rewriteRootRelativeAttributeUrls(out, embedPath);
+  out = rewriteShopifyClientRoutes(out, embedPath);
+  out = rewriteEmbedShopPathsInText(out, embedPath);
 
   out = out.replace(
     /href=(["'])([^"']*checkout[^"']*)\1/gi,
@@ -600,6 +635,18 @@ export async function proxyVendorShopRequest(
     const html = await upstreamResponse.text();
     const body = rewriteShopHtml(html, rewriteOrigin, embedPath);
     headers.set("content-type", contentType);
+
+    if (
+      pathSegments[0] === "cart" &&
+      pathSegments[1] === "change" &&
+      method === "GET" &&
+      upstreamResponse.status >= 200 &&
+      upstreamResponse.status < 400
+    ) {
+      headers.set("location", `${normalizedEmbedBase(embedPath)}/cart`);
+      return new Response(null, { status: 302, headers });
+    }
+
     return new Response(body, { status: upstreamResponse.status, headers });
   }
 
