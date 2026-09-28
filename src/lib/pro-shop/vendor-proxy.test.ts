@@ -5,6 +5,7 @@ import {
   isAllowedProxyUrl,
   resolveProxyTarget,
   rewriteProxyLocationHeader,
+  rewriteProxySetCookieHeader,
   rewriteRootRelativeAttributeUrls,
   rewriteShopHtml,
   rewriteShopifyClientRoutes,
@@ -87,6 +88,28 @@ describe("shop html rewrite", () => {
       /href="\/pro-shop\/embed\/baseline-sports\/collections\/all"/,
     );
     assert.match(out, /<base href="\/pro-shop\/embed\/baseline-sports\/">/);
+  });
+});
+
+describe("proxy session cookies", () => {
+  const embedPath = "/pro-shop/embed/baseline-sports";
+
+  it("rewrites shop Set-Cookie for the embed path and drops Domain", () => {
+    const input =
+      "cart=abc123; path=/; domain=www.baselinesports.us; HttpOnly; Secure";
+    const out = rewriteProxySetCookieHeader(input, embedPath);
+    assert.match(out, /^cart=abc123;/);
+    assert.match(out, /Path=\/pro-shop\/embed\/baseline-sports\//);
+    assert.doesNotMatch(out, /domain=/i);
+    assert.match(out, /HttpOnly/i);
+    assert.match(out, /Secure/i);
+  });
+
+  it("strips __Host- prefix so Path can be scoped to the embed", () => {
+    const input = "__Host-_shopify_s=token; Path=/; Secure; HttpOnly";
+    const out = rewriteProxySetCookieHeader(input, embedPath);
+    assert.match(out, /^_shopify_s=token;/);
+    assert.match(out, /Path=\/pro-shop\/embed\/baseline-sports\//);
   });
 });
 

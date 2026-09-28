@@ -7,7 +7,6 @@ const STRIP_RESPONSE_HEADERS = new Set([
   "cross-origin-opener-policy",
   "cross-origin-resource-policy",
   "permissions-policy",
-  "set-cookie",
   "transfer-encoding",
   "x-frame-options",
 ]);
@@ -27,6 +26,7 @@ const FORWARD_REQUEST_HEADERS = [
   "accept",
   "accept-language",
   "content-type",
+  "cookie",
   "origin",
   "referer",
   "user-agent",
@@ -36,11 +36,70 @@ const FORWARD_REQUEST_HEADERS = [
 function stripHopByHopHeaders(headers: Headers): Headers {
   const next = new Headers();
   headers.forEach((value, key) => {
-    if (!STRIP_RESPONSE_HEADERS.has(key.toLowerCase())) {
+    const lower = key.toLowerCase();
+    if (lower === "set-cookie") return;
+    if (!STRIP_RESPONSE_HEADERS.has(lower)) {
       next.set(key, value);
     }
   });
   return next;
+}
+
+function upstreamSetCookies(headers: Headers): string[] {
+  if (typeof headers.getSetCookie === "function") {
+    return headers.getSetCookie();
+  }
+  const combined = headers.get("set-cookie");
+  return combined ? [combined] : [];
+}
+
+/** Shopify sets Domain=shop; strip and scope Path to the embed so the browser keeps cart state. */
+export function rewriteProxySetCookieHeader(
+  setCookie: string,
+  embedPath: string,
+): string {
+  const cookiePath = `${normalizedEmbedBase(embedPath)}/`;
+  const segments = setCookie.split(";").map((part) => part.trim());
+  const nameValue = segments[0];
+  if (!nameValue) return setCookie;
+
+  const eqIndex = nameValue.indexOf("=");
+  let cookieName = eqIndex >= 0 ? nameValue.slice(0, eqIndex) : nameValue;
+  const cookieValue = eqIndex >= 0 ? nameValue.slice(eqIndex) : "";
+
+  if (cookieName.startsWith("__Host-")) {
+    cookieName = cookieName.slice("__Host-".length);
+  } else if (cookieName.startsWith("__Secure-")) {
+    cookieName = cookieName.slice("__Secure-".length);
+  }
+
+  const attrs: string[] = [];
+  let hasPath = false;
+  let hasSecure = false;
+
+  for (let i = 1; i < segments.length; i += 1) {
+    const part = segments[i];
+    const lower = part.toLowerCase();
+    if (lower.startsWith("domain=")) continue;
+    if (lower.startsWith("path=")) {
+      attrs.push(`Path=${cookiePath}`);
+      hasPath = true;
+      continue;
+    }
+    if (lower === "secure") hasSecure = true;
+    attrs.push(part);
+  }
+
+  if (!hasPath) attrs.push(`Path=${cookiePath}`);
+  if (!hasSecure) attrs.push("Secure");
+
+  return [`${cookieName}${cookieValue}`, ...attrs].join("; ");
+}
+
+function applyProxySetCookies(headers: Headers, upstream: Headers, embedPath: string): void {
+  for (const cookie of upstreamSetCookies(upstream)) {
+    headers.append("set-cookie", rewriteProxySetCookieHeader(cookie, embedPath));
+  }
 }
 
 export function hostnameWithoutWww(host: string): string {
@@ -274,6 +333,7 @@ export async function proxyVendorShopRequest(
   if (!upstreamResponse) return proxyUnavailable();
 
   const headers = stripHopByHopHeaders(upstreamResponse.headers);
+  applyProxySetCookies(headers, upstreamResponse.headers, embedPath);
   const contentType = upstreamResponse.headers.get("content-type") ?? "";
   const location = upstreamResponse.headers.get("location");
   if (location) {
