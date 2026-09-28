@@ -4,6 +4,7 @@ import {
   hostnameWithoutWww,
   isAllowedProxyUrl,
   resolveProxyTarget,
+  shopReferralContext,
   rewriteProxyLocationHeader,
   externalCheckoutBreakoutHtml,
   rewriteProxySetCookieHeader,
@@ -46,10 +47,19 @@ describe("vendor proxy allowlist", () => {
     assert.equal(target.search, "?ref=zl");
   });
 
-  it("preserves affiliate query params from the configured shop URL", () => {
+  it("does not attach affiliate params to embed browse/cart proxy targets", () => {
     const affiliateShop = new URL("https://www.baselinesports.us?aff=217");
-    const target = resolveProxyTarget(affiliateShop, [], "");
-    assert.equal(target.search, "?aff=217");
+    const target = resolveProxyTarget(affiliateShop, ["cart"], "");
+    assert.equal(target.search, "");
+  });
+
+  it("keeps affiliate params for hosted checkout handoff only", () => {
+    const ctx = shopReferralContext(
+      "https://www.baselinesports.us",
+      "https://www.baselinesports.us?aff=217",
+    );
+    assert.equal(ctx.browseOrigin.origin, "https://www.baselinesports.us");
+    assert.equal(ctx.referralParams.get("aff"), "217");
   });
 
   it("rejects protocol-relative and parent-path segments", () => {

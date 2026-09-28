@@ -135,7 +135,7 @@ export function resolveProxyTarget(
   const target = new URL(shopOrigin.origin);
   target.pathname =
     raw.length > 0 ? `/${raw.join("/")}` : shopOrigin.pathname || "/";
-  target.search = search || shopOrigin.search;
+  target.search = search || "";
 
   if (!isAllowedProxyUrl(target, shopOrigin)) {
     throw new Error("Proxy target not allowed");
@@ -149,6 +149,30 @@ function upstreamShopOrigin(shopUrl: string): URL {
     throw new Error("Invalid shop URL");
   }
   return parsed;
+}
+
+/** Affiliate query params apply only at hosted checkout — not on embed browse/cart (auto-discount). */
+export function shopReferralContext(
+  shopUrl: string,
+  referralUrl?: string | null,
+): {
+  browseOrigin: URL;
+  referralParams: URLSearchParams;
+} {
+  const configured = upstreamShopOrigin(shopUrl);
+  const browseOrigin = new URL(configured.origin);
+  const referralSource = referralUrl?.trim() || shopUrl;
+  try {
+    return {
+      browseOrigin,
+      referralParams: new URL(referralSource).searchParams,
+    };
+  } catch {
+    return {
+      browseOrigin,
+      referralParams: new URLSearchParams(configured.search),
+    };
+  }
 }
 
 function embedBasePath(slug: string): string {
@@ -247,9 +271,12 @@ function isShopCheckoutPath(pathSegments: string[]): boolean {
   return root === "checkout" || root === "checkouts";
 }
 
-function ensureShopReferralParams(target: URL, shopOrigin: URL): URL {
+function ensureShopReferralParams(
+  target: URL,
+  referralParams: URLSearchParams,
+): URL {
   const next = new URL(target.toString());
-  shopOrigin.searchParams.forEach((value, key) => {
+  referralParams.forEach((value, key) => {
     if (!next.searchParams.has(key)) {
       next.searchParams.set(key, value);
     }
@@ -257,18 +284,23 @@ function ensureShopReferralParams(target: URL, shopOrigin: URL): URL {
   return next;
 }
 
-function externalShopCheckoutUrl(shopOrigin: URL, pathSegments: string[], search: string): string {
+function externalShopCheckoutUrl(
+  browseOrigin: URL,
+  pathSegments: string[],
+  search: string,
+  referralParams: URLSearchParams,
+): string {
   return ensureShopReferralParams(
-    resolveProxyTarget(shopOrigin, pathSegments, search),
-    shopOrigin,
+    resolveProxyTarget(browseOrigin, pathSegments, search),
+    referralParams,
   ).toString();
 }
 
 function finalizeHandoffCheckoutUrl(
   checkoutUrl: string,
-  shopOrigin: URL,
+  referralParams: URLSearchParams,
 ): string {
-  return ensureShopReferralParams(new URL(checkoutUrl), shopOrigin).toString();
+  return ensureShopReferralParams(new URL(checkoutUrl), referralParams).toString();
 }
 
 function parseCookieJar(cookieHeader: string | null): Map<string, string> {
@@ -314,7 +346,8 @@ function buildHandoffFetchHeaders(
 
 async function followShopifyHandoff(
   request: Request,
-  shopOrigin: URL,
+  browseOrigin: URL,
+  referralParams: URLSearchParams,
   startUrl: URL,
   method: "GET" | "HEAD" = "GET",
 ): Promise<{ url: string; headers: Headers } | null> {
@@ -335,10 +368,10 @@ async function followShopifyHandoff(
     if (upstream.status >= 300 && upstream.status < 400) {
       const location = upstream.headers.get("location");
       const next = location ? resolveRedirectUrl(location, current) : null;
-      if (!next || !isAllowedProxyUrl(next, shopOrigin)) return null;
+      if (!next || !isAllowedProxyUrl(next, browseOrigin)) return null;
       if (next.pathname.startsWith("/checkouts")) {
         return {
-          url: finalizeHandoffCheckoutUrl(next.toString(), shopOrigin),
+          url: finalizeHandoffCheckoutUrl(next.toString(), referralParams),
           headers: upstream.headers,
         };
       }
@@ -348,7 +381,7 @@ async function followShopifyHandoff(
 
     if (current.pathname.startsWith("/checkouts")) {
       return {
-        url: finalizeHandoffCheckoutUrl(current.toString(), shopOrigin),
+        url: finalizeHandoffCheckoutUrl(current.toString(), referralParams),
         headers: lastHeaders,
       };
     }
@@ -363,25 +396,29 @@ async function followShopifyHandoff(
 async function proxyCheckoutHandoff(
   request: Request,
   pathSegments: string[],
-  shopOrigin: URL,
+  browseOrigin: URL,
+  referralParams: URLSearchParams,
   embedPath: string,
   requestSearch: string,
 ): Promise<Response> {
   const method = request.method === "HEAD" ? "HEAD" : "GET";
 
-  const start = resolveProxyTarget(shopOrigin, pathSegments, requestSearch);
+  const start = resolveProxyTarget(browseOrigin, pathSegments, requestSearch);
   const resolved = await followShopifyHandoff(
     request,
-    shopOrigin,
+    browseOrigin,
+    referralParams,
     start,
     method,
   );
 
   return externalCheckoutBreakoutResponse(
     resolved?.url ??
-      finalizeHandoffCheckoutUrl(
-        externalShopCheckoutUrl(shopOrigin, pathSegments, requestSearch),
-        shopOrigin,
+      externalShopCheckoutUrl(
+        browseOrigin,
+        pathSegments,
+        requestSearch,
+        referralParams,
       ),
     resolved?.headers ?? new Headers(),
     embedPath,
@@ -532,6 +569,7 @@ export function rewriteShopifyAjaxPayload(
 export type VendorShopProxyInput = {
   slug: string;
   shopUrl: string;
+  referralUrl?: string | null;
 };
 
 function proxyUnavailable(): Response {
@@ -546,7 +584,10 @@ export async function proxyVendorShopRequest(
   request: Request,
   pathSegments: string[],
 ): Promise<Response> {
-  const shopOrigin = upstreamShopOrigin(vendor.shopUrl);
+  const { browseOrigin, referralParams } = shopReferralContext(
+    vendor.shopUrl,
+    vendor.referralUrl,
+  );
   const embedPath = embedBasePath(vendor.slug);
   const requestUrl = new URL(request.url);
   const method = request.method.toUpperCase();
@@ -564,15 +605,16 @@ export async function proxyVendorShopRequest(
     return proxyCheckoutHandoff(
       request,
       pathSegments,
-      shopOrigin,
+      browseOrigin,
+      referralParams,
       embedPath,
       requestUrl.search,
     );
   }
 
-  let target = resolveProxyTarget(shopOrigin, pathSegments, requestUrl.search);
+  let target = resolveProxyTarget(browseOrigin, pathSegments, requestUrl.search);
   let upstreamResponse: Response | null = null;
-  let rewriteOrigin = shopOrigin;
+  let rewriteOrigin = browseOrigin;
 
   for (let hop = 0; hop <= MAX_PROXY_REDIRECTS; hop += 1) {
     upstreamResponse = await fetch(target.toString(), {
@@ -594,9 +636,9 @@ export async function proxyVendorShopRequest(
     const next = resolveRedirectUrl(location, target);
     if (!next) return proxyUnavailable();
 
-    if (!isAllowedProxyUrl(next, shopOrigin)) {
+    if (!isAllowedProxyUrl(next, browseOrigin)) {
       return externalCheckoutBreakoutResponse(
-        ensureShopReferralParams(next, shopOrigin).toString(),
+        ensureShopReferralParams(next, referralParams).toString(),
         upstreamResponse.headers,
         embedPath,
       );
@@ -604,7 +646,7 @@ export async function proxyVendorShopRequest(
 
     if (next.pathname.startsWith("/checkouts")) {
       return externalCheckoutBreakoutResponse(
-        ensureShopReferralParams(next, shopOrigin).toString(),
+        finalizeHandoffCheckoutUrl(next.toString(), referralParams),
         upstreamResponse.headers,
         embedPath,
       );
@@ -628,9 +670,9 @@ export async function proxyVendorShopRequest(
     upstreamResponse.status < 400
   ) {
     const external = resolveRedirectUrl(location, rewriteOrigin);
-    if (external && !isAllowedProxyUrl(external, shopOrigin)) {
+    if (external && !isAllowedProxyUrl(external, browseOrigin)) {
       return externalCheckoutBreakoutResponse(
-        ensureShopReferralParams(external, shopOrigin).toString(),
+        ensureShopReferralParams(external, referralParams).toString(),
         upstreamResponse.headers,
         embedPath,
       );
@@ -640,7 +682,7 @@ export async function proxyVendorShopRequest(
   if (location) {
     headers.set(
       "location",
-      rewriteProxyLocationHeader(location, shopOrigin, embedPath),
+      rewriteProxyLocationHeader(location, browseOrigin, embedPath),
     );
   }
 
