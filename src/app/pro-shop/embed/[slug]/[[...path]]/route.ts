@@ -14,7 +14,7 @@ function partnerShopUrl(vendor: {
   return shop || null;
 }
 
-export async function GET(request: Request, context: RouteContext) {
+async function proxyEmbedRequest(request: Request, context: RouteContext) {
   const { slug, path } = await context.params;
   const vendor = await fetchPublicProShopVendorBySlug(slug);
 
@@ -38,6 +38,26 @@ export async function GET(request: Request, context: RouteContext) {
   }
 }
 
+export async function GET(request: Request, context: RouteContext) {
+  return proxyEmbedRequest(request, context);
+}
+
 export async function HEAD(request: Request, context: RouteContext) {
-  return GET(request, context);
+  return proxyEmbedRequest(request, context);
+}
+
+export async function POST(request: Request, context: RouteContext) {
+  return proxyEmbedRequest(request, context);
+}
+
+export async function PUT(request: Request, context: RouteContext) {
+  return proxyEmbedRequest(request, context);
+}
+
+export async function PATCH(request: Request, context: RouteContext) {
+  return proxyEmbedRequest(request, context);
+}
+
+export async function DELETE(request: Request, context: RouteContext) {
+  return proxyEmbedRequest(request, context);
 }

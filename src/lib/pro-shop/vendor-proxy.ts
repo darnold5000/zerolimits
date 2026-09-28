@@ -14,6 +14,25 @@ const STRIP_RESPONSE_HEADERS = new Set([
 
 const MAX_PROXY_REDIRECTS = 5;
 
+const PROXY_METHODS = new Set([
+  "GET",
+  "HEAD",
+  "POST",
+  "PUT",
+  "PATCH",
+  "DELETE",
+]);
+
+const FORWARD_REQUEST_HEADERS = [
+  "accept",
+  "accept-language",
+  "content-type",
+  "origin",
+  "referer",
+  "user-agent",
+  "x-requested-with",
+] as const;
+
 function stripHopByHopHeaders(headers: Headers): Headers {
   const next = new Headers();
   headers.forEach((value, key) => {
@@ -79,6 +98,46 @@ function embedBasePath(slug: string): string {
 
 function normalizedEmbedBase(embedPath: string): string {
   return embedPath.endsWith("/") ? embedPath.slice(0, -1) : embedPath;
+}
+
+/** Keep cart/checkout redirects inside the embed proxy path. */
+export function rewriteProxyLocationHeader(
+  location: string,
+  shopOrigin: URL,
+  embedPath: string,
+): string {
+  const base = normalizedEmbedBase(embedPath);
+
+  try {
+    const resolved = new URL(location, shopOrigin.origin);
+    if (!isAllowedProxyUrl(resolved, shopOrigin)) {
+      return location;
+    }
+    return `${base}${resolved.pathname}${resolved.search}${resolved.hash}`;
+  } catch {
+    if (location.startsWith("/") && !location.startsWith("//")) {
+      if (location === base || location.startsWith(`${base}/`)) {
+        return location;
+      }
+      return `${base}${location}`;
+    }
+    return location;
+  }
+}
+
+function buildUpstreamRequestHeaders(request: Request): Headers {
+  const headers = new Headers();
+  for (const name of FORWARD_REQUEST_HEADERS) {
+    const value = request.headers.get(name);
+    if (value) headers.set(name, value);
+  }
+  if (!headers.has("accept")) {
+    headers.set("accept", "*/*");
+  }
+  if (!headers.has("user-agent")) {
+    headers.set("user-agent", "Mozilla/5.0 (compatible; ZeroLimitsProShop/1.0)");
+  }
+  return headers;
 }
 
 const ROOT_RELATIVE_ATTR_RE =
@@ -164,7 +223,16 @@ export async function proxyVendorShopRequest(
   const shopOrigin = upstreamShopOrigin(vendor.shopUrl);
   const embedPath = embedBasePath(vendor.slug);
   const requestUrl = new URL(request.url);
-  const method = request.method === "HEAD" ? "HEAD" : "GET";
+  const method = request.method.toUpperCase();
+  if (!PROXY_METHODS.has(method)) {
+    return new Response(JSON.stringify({ error: "Method not allowed" }), {
+      status: 405,
+      headers: { "content-type": "application/json" },
+    });
+  }
+
+  const requestBody =
+    method === "GET" || method === "HEAD" ? undefined : await request.arrayBuffer();
 
   let target = resolveProxyTarget(shopOrigin, pathSegments, requestUrl.search);
   let upstreamResponse: Response | null = null;
@@ -173,13 +241,8 @@ export async function proxyVendorShopRequest(
   for (let hop = 0; hop <= MAX_PROXY_REDIRECTS; hop += 1) {
     upstreamResponse = await fetch(target.toString(), {
       method,
-      headers: {
-        Accept: request.headers.get("accept") ?? "*/*",
-        "Accept-Language": request.headers.get("accept-language") ?? "en-US,en;q=0.9",
-        "User-Agent":
-          request.headers.get("user-agent") ??
-          "Mozilla/5.0 (compatible; ZeroLimitsProShop/1.0)",
-      },
+      headers: buildUpstreamRequestHeaders(request),
+      body: requestBody,
       redirect: "manual",
       cache: "no-store",
     });
@@ -212,6 +275,13 @@ export async function proxyVendorShopRequest(
 
   const headers = stripHopByHopHeaders(upstreamResponse.headers);
   const contentType = upstreamResponse.headers.get("content-type") ?? "";
+  const location = upstreamResponse.headers.get("location");
+  if (location) {
+    headers.set(
+      "location",
+      rewriteProxyLocationHeader(location, shopOrigin, embedPath),
+    );
+  }
 
   if (method === "HEAD") {
     return new Response(null, { status: upstreamResponse.status, headers });

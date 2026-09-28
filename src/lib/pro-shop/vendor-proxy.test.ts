@@ -4,6 +4,7 @@ import {
   hostnameWithoutWww,
   isAllowedProxyUrl,
   resolveProxyTarget,
+  rewriteProxyLocationHeader,
   rewriteRootRelativeAttributeUrls,
   rewriteShopHtml,
   rewriteShopifyClientRoutes,
@@ -86,5 +87,25 @@ describe("shop html rewrite", () => {
       /href="\/pro-shop\/embed\/baseline-sports\/collections\/all"/,
     );
     assert.match(out, /<base href="\/pro-shop\/embed\/baseline-sports\/">/);
+  });
+});
+
+describe("proxy redirect locations", () => {
+  const embedPath = "/pro-shop/embed/baseline-sports";
+  const shopOrigin = new URL("https://www.baselinesports.us/");
+
+  it("rewrites upstream cart redirects into the embed path", () => {
+    assert.equal(
+      rewriteProxyLocationHeader("/cart", shopOrigin, embedPath),
+      "/pro-shop/embed/baseline-sports/cart",
+    );
+    assert.equal(
+      rewriteProxyLocationHeader(
+        "https://www.baselinesports.us/cart?added=1",
+        shopOrigin,
+        embedPath,
+      ),
+      "/pro-shop/embed/baseline-sports/cart?added=1",
+    );
   });
 });
