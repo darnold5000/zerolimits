@@ -6,6 +6,7 @@ import {
   resolveProxyTarget,
   rewriteProxyLocationHeader,
   externalCheckoutBreakoutHtml,
+  wrapCheckoutUrlWithShopDiscount,
   rewriteProxySetCookieHeader,
   rewriteShopifyAjaxPayload,
   rewriteRootRelativeAttributeUrls,
@@ -90,6 +91,20 @@ describe("shop html rewrite", () => {
       /href="\/pro-shop\/embed\/baseline-sports\/collections\/all"/,
     );
     assert.match(out, /<base href="\/pro-shop\/embed\/baseline-sports\/">/);
+  });
+});
+
+describe("checkout discount handoff", () => {
+  const shopOrigin = new URL("https://www.baselinesports.us?aff=217");
+
+  it("wraps checkout URLs with Shopify discount redirect", () => {
+    const checkout =
+      "https://www.baselinesports.us/checkouts/cn/abc/en-us?_r=token";
+    const out = wrapCheckoutUrlWithShopDiscount(checkout, shopOrigin, "ZL10");
+    const parsed = new URL(out);
+    assert.equal(parsed.pathname, "/discount/ZL10");
+    assert.match(parsed.searchParams.get("redirect") ?? "", /\/checkouts\/cn\/abc/);
+    assert.equal(parsed.searchParams.get("aff"), "217");
   });
 });
 

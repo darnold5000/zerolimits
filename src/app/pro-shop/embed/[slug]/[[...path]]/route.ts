@@ -29,7 +29,7 @@ async function proxyEmbedRequest(request: Request, context: RouteContext) {
 
   try {
     return await proxyVendorShopRequest(
-      { slug: vendor.slug, shopUrl },
+      { slug: vendor.slug, shopUrl, discountCode: vendor.discountCode },
       request,
       path ?? [],
     );
